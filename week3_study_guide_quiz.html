@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURS 3200 — Week 3 Study Guide Quiz</title>
+<style>
+  :root {
+    --navy: #1E2761;
+    --navy-deep: #141B47;
+    --ice: #CADCFC;
+    --ice-pale: #EEF3FD;
+    --paper: #FAFBFD;
+    --ink: #1B2233;
+    --muted: #5B6478;
+    --good: #1E6E4E;
+    --good-bg: #E3F3EA;
+    --bad: #A3312A;
+    --bad-bg: #FBE9E7;
+    --line: #1E276122;
+    --serif: Cambria, "Times New Roman", Georgia, serif;
+    --sans: Calibri, Arial, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .app { width: 100%; max-width: 700px; }
+
+  .trace-wrap { position: relative; height: 46px; margin-bottom: 6px; overflow: hidden; }
+  .trace-track { position: absolute; inset: 0; }
+  .trace-fill {
+    position: absolute; inset: 0;
+    clip-path: inset(0 var(--reveal, 100%) 0 0);
+    transition: clip-path .5s ease;
+  }
+  .trace-track svg, .trace-fill svg { width: 100%; height: 100%; display: block; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .topbar strong { color: var(--navy); }
+  .catbar {
+    font-size: 11px; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--navy); font-weight: 700; margin: 2px 0 0;
+  }
+
+  h1 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin: 16px 0 2px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 26px; line-height: 1.45; }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 26px 26px 22px; box-shadow: 0 1px 2px rgba(30,39,97,.04);
+  }
+
+  .qnum { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .qtext { font-size: 17px; line-height: 1.45; margin: 0 0 20px; color: var(--navy-deep); font-weight: 600; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    text-align: left; background: var(--ice-pale); border: 1px solid transparent;
+    border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-family: var(--sans);
+    color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+  }
+  .choice:hover:not(:disabled) { background: var(--ice); }
+  .choice:active:not(:disabled) { transform: scale(.997); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); font-weight: 600; }
+  .choice.reveal-correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+
+  .explain {
+    margin-top: 18px; padding: 14px 16px; background: var(--ice-pale);
+    border-left: 3px solid var(--navy); border-radius: 0 8px 8px 0;
+    font-size: 13.5px; line-height: 1.55; color: var(--ink); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+
+  .footer-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .next-btn {
+    background: var(--navy); color: #fff; border: none; border-radius: 7px;
+    padding: 11px 22px; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .15s;
+  }
+  .next-btn.show { opacity: 1; pointer-events: auto; }
+  .next-btn:hover { background: var(--navy-deep); }
+
+  .results { text-align: center; padding: 10px 8px 4px; }
+  .score-big { font-family: var(--serif); font-size: 52px; color: var(--navy); font-weight: 700; margin: 6px 0 0; }
+  .score-label { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  .verdict { font-size: 15px; color: var(--ink); margin-bottom: 22px; line-height: 1.5; }
+
+  .cat-breakdown { text-align: left; margin: 0 0 24px; padding: 0; list-style: none; }
+  .cat-breakdown li {
+    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
+    background: var(--ice-pale); border-radius: 7px; margin-bottom: 6px; font-size: 12.5px;
+  }
+  .cat-breakdown b { color: var(--navy); white-space: nowrap; }
+
+  .missed-list { text-align: left; margin: 0 0 26px; padding: 0; list-style: none; }
+  .missed-list li {
+    padding: 10px 14px; background: var(--ice-pale); border-radius: 7px;
+    margin-bottom: 8px; font-size: 13px; line-height: 1.5;
+  }
+  .missed-list li b { color: var(--navy); }
+
+  .restart-btn {
+    background: transparent; color: var(--navy); border: 1.5px solid var(--navy);
+    border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 600;
+    font-family: var(--sans); cursor: pointer;
+  }
+  .restart-btn:hover { background: var(--ice-pale); }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 18px; }
+    .qtext { font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="trace-wrap" aria-hidden="true">
+    <div class="trace-track">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#CADCFC" stroke-width="3"/></svg>
+    </div>
+    <div class="trace-fill" id="traceFill">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#1E2761" stroke-width="3"/></svg>
+    </div>
+  </div>
+  <div class="topbar">
+    <span>NURS 3200 · Week 3</span>
+    <span id="progressText"><strong>1</strong> / 52</span>
+  </div>
+  <div class="catbar" id="catBar"></div>
+
+  <h1>Week 3 — Study Guide Quiz</h1>
+  <p class="sub">Organized around each Week 3 study guide bullet, plus the supporting lecture content: Jordan's shift on 4 West, the Ten Rights, high-alert medications, the RaDonda Vaught case, and routes of administration.</p>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===================== 1. DOCUMENTATION QUALITY =====================
+  {
+    cat: "1. Documentation Quality",
+    q: "Which of the ANA's Six Principles of documentation means recording only what you actually observed, measured, or were told — never assumptions or hopes?",
+    choices: ["Accurate", "Factual", "Organized", "Compliant"],
+    correct: 1,
+    explain: "Factual documentation records only observed/measured/reported information. Accurate refers to precise language and exact values; Organized follows the nursing process; Compliant follows institutional/HIPAA/Joint Commission standards."
+  },
+  {
+    cat: "1. Documentation Quality",
+    q: "Which nursing note is well-documented rather than vague?",
+    choices: ["\"0800 — gave Lasix, patient doing okay, will check later\"", "\"Patient comfortable, resting well\"", "\"0802 — Furosemide 40mg IV push over 2 min via R AC PIV, patent. BP 144/88, HR 86, SpO2 94% on 2L NC. Tolerated without adverse effects. — J. Nguyen BSN RN\"", "\"Patient seems better this morning\""],
+    correct: 2,
+    explain: "The complete note includes drug name/dose/route, objective assessment data, patient response, and a signature — everything the vague examples lack."
+  },
+  {
+    cat: "1. Documentation Quality",
+    q: "What is legally and clinically wrong with charting \"will check later\" as a plan?",
+    choices: ["Nothing — it shows the nurse intends to follow up", "It is not a specific nursing intervention or measurable follow-up plan", "It should be replaced with \"as needed\"", "It is only a problem if the patient has an adverse reaction"],
+    correct: 1,
+    explain: "\"Will check later\" has no specific time, parameter, or action — it doesn't meet the Complete or Accurate documentation principles and offers no real follow-up plan."
+  },
+  {
+    cat: "1. Documentation Quality",
+    q: "According to the lecture's legal guidelines, what should a nurse do if they make a charting error?",
+    choices: ["Use white-out to remove it completely", "Delete the entry and rewrite it", "Draw a single line through the error, write \"error,\" date, and initial", "Leave it as-is since edits are not allowed"],
+    correct: 2,
+    explain: "Never erase, white-out, or delete a documentation error. Draw a single line through it, write \"error,\" date, and initial — preserving the original entry."
+  },
+  {
+    cat: "1. Documentation Quality",
+    q: "Why is charting a medication BEFORE giving it considered a serious violation rather than a minor error?",
+    choices: ["It wastes time", "It constitutes falsification of the medical record", "It is only a problem if the patient refuses the medication", "It violates HIPAA specifically"],
+    correct: 1,
+    explain: "Charting before administration is falsification of medical records — a frequent HESI trap. Always document AFTER giving the medication."
+  },
+  {
+    cat: "1. Documentation Quality",
+    q: "What made Jordan's copy-paste error dangerous in the near-miss scenario with Mr. Thompson?",
+    choices: ["She copied a note from a different patient entirely", "She copied his 0800 note (\"ambulating in hallway\") to 1400 without noticing he had NOT ambulated and had new leg swelling", "She forgot to sign the note", "She used an unapproved abbreviation"],
+    correct: 1,
+    explain: "The 0800 note said Mr. Thompson was ambulating; by 1400 he had not moved in six hours and had new right leg swelling (a possible DVT) — the unreviewed copy-paste masked a real clinical change and became a patient safety event requiring an incident report."
+  },
+
+  // ===================== 2. PARTS OF THE MEDICAL RECORD / CHARTING FORMATS =====================
+  {
+    cat: "2. Medical Record & Charting Formats",
+    q: "Which charting format is structured as Situation, Background, Assessment, Recommendation, and is used specifically for verbal handoffs and provider calls?",
+    choices: ["SOAP", "DAR/Focus", "SBAR", "CBE"],
+    correct: 2,
+    explain: "SBAR (Situation-Background-Assessment-Recommendation) is designed for verbal handoffs and provider notification calls, not as a permanent narrative charting format."
+  },
+  {
+    cat: "2. Medical Record & Charting Formats",
+    q: "Which charting format relies on flow sheets, where only deviations from normal findings are written out in narrative form?",
+    choices: ["Narrative", "CBE (Charting by Exception)", "SOAP", "SBAR"],
+    correct: 1,
+    explain: "CBE (Charting by Exception) is built around flowsheets for high-volume units — normal findings are simply checked off, and only exceptions/deviations get a narrative note."
+  },
+  {
+    cat: "2. Medical Record & Charting Formats",
+    q: "Free-form chronological prose, best used for complex situations and legal events, describes which charting format?",
+    choices: ["Narrative", "DAR/Focus", "SOAP", "CBE"],
+    correct: 0,
+    explain: "Narrative charting is free-form chronological prose, best suited for complex situations and events with legal significance where a flowsheet or structured format wouldn't capture enough detail."
+  },
+  {
+    cat: "2. Medical Record & Charting Formats",
+    q: "SOAP charting (Subjective-Objective-Assessment-Plan) is best suited for:",
+    choices: ["Nursing-focused inpatient charting around a single data point", "Outpatient, provider-focused notes", "Verbal handoffs only", "High-volume flow-sheet units"],
+    correct: 1,
+    explain: "SOAP is typically used for outpatient, provider-focused documentation. DAR/Focus is the nursing-focused inpatient equivalent, built around a specific data point, action, and response."
+  },
+  {
+    cat: "2. Medical Record & Charting Formats",
+    q: "If you needed to find a patient's serial vital signs trended across an entire shift, which part of the record would you consult first?",
+    choices: ["The discharge summary", "The graphic record/flowsheet", "The narrative admission note", "The consent form"],
+    correct: 1,
+    explain: "The graphic record/flowsheet is designed for trends over time — serial vital signs, I&O, and daily weights plotted across a shift or admission, rather than a single narrative entry."
+  },
+
+  // ===================== 3. DISCHARGE PLANNING =====================
+  {
+    cat: "3. Discharge Planning",
+    q: "When should discharge planning ideally begin?",
+    choices: ["The morning of discharge", "At admission", "Only after the patient requests it", "Once the attending physician writes discharge orders"],
+    correct: 1,
+    explain: "Discharge planning should begin at admission — starting early gives the team time to assess post-discharge needs, arrange resources, and complete thorough education rather than rushing it at the last minute."
+  },
+  {
+    cat: "3. Discharge Planning",
+    q: "What percentage of medication errors occur at transitions of care (admission, transfer, discharge), per the lecture?",
+    choices: ["Up to 20%", "Up to 40%", "Up to 60%", "Up to 90%"],
+    correct: 2,
+    explain: "Up to 60% of medication errors occur at transitions of care — which is exactly why medication reconciliation and broader discharge planning are highest-yield safety interventions, and why they shouldn't be compressed into the final rushed hour."
+  },
+  {
+    cat: "3. Discharge Planning",
+    q: "In Jordan's discharge reconciliation for Mr. Thompson, what discrepancy did she catch?",
+    choices: ["He was allergic to a discharge medication", "His home metoprolol dose was 25mg but the discharge order said 50mg", "He had no ride home", "His discharge paperwork had the wrong name"],
+    correct: 1,
+    explain: "Jordan reconciled all 8 of his medications and caught the metoprolol dose discrepancy (home 25mg vs. discharge order 50mg), calling the provider before he left — exactly the kind of error early, careful discharge planning is designed to catch."
+  },
+  {
+    cat: "3. Discharge Planning",
+    q: "What method should a nurse use to confirm a patient truly understands their discharge medication teaching, rather than simply asking \"Do you understand?\"",
+    choices: ["Teach-back — asking the patient to explain it in their own words", "A signed consent form only", "Assuming understanding if the patient nods", "Providing only written materials with no verbal discussion"],
+    correct: 0,
+    explain: "Teach-back means asking the patient to explain the information back in their own words (\"Can you tell me why you're taking this medication?\") — a much more reliable check than a yes/no question."
+  },
+
+  // ===================== 4. TEN RIGHTS OF MEDICATION ADMINISTRATION =====================
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "For Right Patient identification, which of the following is an acceptable identifier?",
+    choices: ["Room number alone", "Name plus date of birth, or name plus MRN", "The name on the door tag", "Verbal confirmation from a family member only"],
+    correct: 1,
+    explain: "Two unique identifiers are required — name + DOB or name + MRN. Room number alone is NEVER an acceptable identifier, which is exactly what almost caused Jordan to give digoxin to the wrong patient."
+  },
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "Which Right is violated if a nurse charts a medication as given BEFORE actually administering it?",
+    choices: ["Right Route", "Right Documentation", "Right Time", "Right to Refuse"],
+    correct: 1,
+    explain: "Right Documentation requires charting AFTER administration, never before — pre-charting is considered falsification of medical records."
+  },
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "A patient has the right to refuse any medication at any time. What must the nurse do when this happens?",
+    choices: ["Give the medication anyway if it's ordered", "Document the refusal completely and notify the provider", "Only document if the patient's condition worsens afterward", "Administer it covertly in food or drink"],
+    correct: 1,
+    explain: "Right to Refuse means the patient can decline any medication; the nurse's obligation is to document the refusal completely and notify the provider — never to administer covertly."
+  },
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "Why is Right Route critical — for example, why can't a PO order simply be given IV instead?",
+    choices: ["It's just an institutional preference with no clinical impact", "Route changes onset, peak, safety profile, and reversibility entirely, and requires a new order", "IV is always safer than PO regardless of the drug", "Only pharmacists are affected by route changes"],
+    correct: 1,
+    explain: "Changing the route changes onset, peak, safety profile, and reversibility of a drug entirely — a route change always requires a new order, never a nurse's independent judgment call."
+  },
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "Right Reason means:",
+    choices: ["The nurse only needs to know the drug name, not why it's given", "The nurse should know why a medication is being given — and find out first if they don't", "Only the pharmacist needs to know the reason for a medication", "Reason only matters for PRN medications"],
+    correct: 1,
+    explain: "Administering a medication without knowing the reason is unsafe regardless of whether it's technically the \"right drug\" — the nurse must know the clinical rationale before giving it."
+  },
+  {
+    cat: "4. Ten Rights of Medication Administration",
+    q: "What ultimately stopped Jordan from giving digoxin to the wrong patient in Room 412?",
+    choices: ["She recognized the patient by sight", "The barcode scanner alerted her to a patient ID mismatch", "The patient told her his name was wrong", "A colleague happened to walk by and stopped her"],
+    correct: 1,
+    explain: "The scanner beeped \"ERROR — Patient ID mismatch\" when she scanned the wristband — Mr. Thompson was actually in Room 421, not 412. This illustrates why Right Patient verification (two identifiers, scanned and confirmed) is a critical safety layer."
+  },
+
+  // ===================== 5. VITAL SIGNS CONTRAINDICATING MEDICATIONS =====================
+  {
+    cat: "5. Vital Signs Contraindicating Medications",
+    q: "Per the Week 3 medication library, metoprolol succinate should be held if:",
+    choices: ["HR is above 100 or SBP is above 140", "HR is below 60 or SBP is below 90", "Temperature is above 38°C", "SpO2 is below 95%"],
+    correct: 1,
+    explain: "Metoprolol (a beta-1 blocker) should be held if HR <60 or SBP <90 — giving it despite bradycardia or hypotension could dangerously lower both further."
+  },
+  {
+    cat: "5. Vital Signs Contraindicating Medications",
+    q: "If a scheduled medication is contraindicated by the patient's current vital signs, what should the nurse do?",
+    choices: ["Give half the dose instead", "Hold the medication, document the vital signs and rationale, and notify the prescriber", "Skip it silently and give it at the next scheduled time", "Give it anyway since it was already ordered"],
+    correct: 1,
+    explain: "The correct action is to hold the medication, document the specific vital signs and rationale for holding, and notify the prescriber — not to silently skip doses or administer despite a clear contraindication."
+  },
+  {
+    cat: "5. Vital Signs Contraindicating Medications",
+    q: "Why should a patient never be told to simply stop taking a beta-blocker like metoprolol abruptly on their own?",
+    choices: ["It has no significant effect either way", "Abrupt discontinuation carries rebound angina/MI risk", "It will cause immediate hypertension only", "Beta-blockers have no withdrawal effects"],
+    correct: 1,
+    explain: "The lecture explicitly warns: NEVER stop a beta-blocker abruptly — doing so carries rebound angina or MI risk. Holding a single dose for bradycardia is different from discontinuing the medication altogether."
+  },
+  {
+    cat: "5. Vital Signs Contraindicating Medications",
+    q: "In Jordan's oral medication pass, Mr. Ahmed had not eaten and said he felt sick to his stomach. Which medication is it safest to hold, and why?",
+    choices: ["Lisinopril, because it requires food", "Metformin, because giving it without food causes significant GI upset", "Furosemide, because it requires food", "Metoprolol, because it requires food"],
+    correct: 1,
+    explain: "Metformin given without food causes significant GI upset (nausea, diarrhea) — with Mr. Ahmed already nauseated and not eating, holding metformin and reassessing (and notifying the provider if needed) is the safer action."
+  },
+  {
+    cat: "5. Vital Signs Contraindicating Medications",
+    q: "What broader principle does holding a contraindicated medication reflect, per the medication safety lecture?",
+    choices: ["The nurse's job is only to follow orders exactly as written, regardless of the patient's current status", "The nurse's obligation is to question orders that do not make clinical sense and verify before administering", "Only pharmacists can decide to hold a medication", "Holding any medication requires a formal ethics committee review"],
+    correct: 1,
+    explain: "The lecture is explicit: a nurse's obligation is not just to follow orders — it's to question orders that don't make clinical sense, verify before administering, and advocate for the patient."
+  },
+
+  // ===================== 6. SOCIAL MEDIA & PROFESSIONAL/LEGAL RESPONSIBILITY =====================
+  {
+    cat: "6. Social Media & Legal Responsibility",
+    q: "A nurse posts a photo of a patient's injury on social media without including the patient's name. Is this a HIPAA violation?",
+    choices: ["No, since no name was used", "Yes, it can still be a violation if the surrounding context makes the patient identifiable", "Only if the post is public rather than private", "Only if the patient finds out and complains"],
+    correct: 1,
+    explain: "A real case referenced in the lecture: a nurse lost her license and faced criminal charges for exactly this — no name was used, but the context made the patient identifiable, and it was still ruled a violation."
+  },
+  {
+    cat: "6. Social Media & Legal Responsibility",
+    q: "What fine range can apply per PHI (Protected Health Information) violation?",
+    choices: ["A flat $50 fee", "$100 to $50,000, with possible criminal charges if willful", "No fines, only a formal warning", "$1 million minimum per violation"],
+    correct: 1,
+    explain: "PHI violations carry fines from $100 to $50,000 per violation, with criminal charges possible if the violation was willful."
+  },
+  {
+    cat: "6. Social Media & Legal Responsibility",
+    q: "What is the lecture's simple rule of thumb for deciding whether to post something related to your clinical work?",
+    choices: ["If it's anonymized, it's always fine", "If you would not want the patient to see what you posted, do not post it", "If it happened more than 24 hours ago, it's no longer sensitive", "Only post if a supervisor approves it in advance"],
+    correct: 1,
+    explain: "The lecture's guidance is simple and durable: if you would not want the patient to see what you posted, do not post it — regardless of whether a name was used or how much time has passed."
+  },
+  {
+    cat: "6. Social Media & Legal Responsibility",
+    q: "Which of these is included in the broad definition of PHI (Protected Health Information)?",
+    choices: ["Only the patient's diagnosis", "Name, address, DOB, phone, SSN, MRN, diagnosis, photos, or any combination of data that could identify a patient", "Only information in the paper chart, not digital records", "Only information the patient explicitly labels as private"],
+    correct: 1,
+    explain: "PHI is broad — it includes any single identifying detail OR any combination of data points that together could identify a patient, which is why even \"anonymized\" posts can still violate HIPAA."
+  },
+  {
+    cat: "6. Social Media & Legal Responsibility",
+    q: "Besides social media posting, which of these is also part of protecting electronic PHI (ePHI)?",
+    choices: ["Sharing your login credentials with a trusted coworker in a pinch", "Never sharing login credentials, always logging out when stepping away, and never accessing records of patients not under your care", "Leaving your workstation logged in during breaks for convenience", "Accessing a friend's chart out of curiosity if they're a patient at your facility"],
+    correct: 1,
+    explain: "ePHI protection includes never sharing login credentials, always logging out when stepping away, and never accessing the records of patients not under your care — all part of the same confidentiality responsibility as social media use."
+  },
+
+  // ===================== 7. MEDICATION ORDERS & TYPES =====================
+  {
+    cat: "7. Medication Orders & Types",
+    q: "Which of these is NOT one of the required components of a valid medication order?",
+    choices: ["Patient name and MRN", "Drug name, dose, route, and frequency", "The patient's room number as the sole identifier", "Date, time, and prescriber's signature"],
+    correct: 2,
+    explain: "A valid order requires patient name and MRN (never room number alone), full drug name/dose/route/frequency, and date/time/prescriber signature. Room number is explicitly called out as never an acceptable identifier."
+  },
+  {
+    cat: "7. Medication Orders & Types",
+    q: "A STAT order means the medication should be administered within what timeframe?",
+    choices: ["Within the next 24 hours", "Within 5–15 minutes", "Within 1 hour", "At the next scheduled medication pass"],
+    correct: 1,
+    explain: "STAT orders require immediate administration — within 5–15 minutes — and should be prioritized above routine medication passes, as in Jordan's digoxin STAT order for Mr. Thompson."
+  },
+  {
+    cat: "7. Medication Orders & Types",
+    q: "A PRN order (\"Morphine 2mg IV q4h PRN pain >5/10\") requires the nurse to:",
+    choices: ["Give the medication automatically every 4 hours regardless of symptoms", "Assess whether the specific criteria are met before giving, and document rationale and response", "Give it only if a family member requests it", "Skip assessment since the order already specifies the trigger"],
+    correct: 1,
+    explain: "PRN orders are given only when specific criteria are met — the nurse must assess whether those criteria (e.g., pain >5/10) are actually present before administering, then document the rationale and the patient's response."
+  },
+  {
+    cat: "7. Medication Orders & Types",
+    q: "A pre-approved order set for a specific clinical condition, such as a DVT prophylaxis protocol post-surgery, is an example of a:",
+    choices: ["One-time/single order", "Standing order", "Routine/scheduled order", "STAT order"],
+    correct: 1,
+    explain: "Standing orders are pre-approved order sets for specific clinical conditions; the nurse's role is to verify the patient meets criteria before initiating and document the clinical rationale."
+  },
+  {
+    cat: "7. Medication Orders & Types",
+    q: "Why must drug names never be abbreviated in a medication order?",
+    choices: ["Abbreviations take up too much space in the EHR", "Abbreviations can prevent look-alike/sound-alike drug errors when the full name is spelled out", "It is only a formatting preference with no safety implication", "Only brand names can be abbreviated, not generic names"],
+    correct: 1,
+    explain: "No abbreviations of drug names are allowed specifically to prevent look-alike/sound-alike errors — generic names are preferred, and both generic and brand names must be spelled out completely."
+  },
+
+  // ===================== 8. HIGH-ALERT MEDICATIONS & JUST CULTURE =====================
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "Which of these is classified as an ISMP high-alert medication category?",
+    choices: ["Acetaminophen", "Insulin", "Multivitamins", "Docusate (stool softener)"],
+    correct: 1,
+    explain: "ISMP high-alert medications include anticoagulants, insulin, opioids, concentrated electrolytes (like IV KCl), chemotherapy, and neuromuscular blocking agents — all requiring extra caution due to potential for severe harm if an error occurs."
+  },
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "What nursing safeguard is required for many high-alert medications like insulin and heparin?",
+    choices: ["No special precautions beyond routine administration", "An independent double-check by a second nurse who separately calculates and verifies before administration", "Only physician verification, not nursing verification", "Verification only if the patient requests it"],
+    correct: 1,
+    explain: "Many institutions require an independent double-check — a second nurse independently calculates and verifies the dose before administration — plus dual signatures for insulin, heparin, and blood products."
+  },
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "In the RaDonda Vaught case, what medication was mistakenly given instead of Versed (midazolam)?",
+    choices: ["Vecuronium, a neuromuscular blocking agent that causes respiratory arrest", "Digoxin, a cardiac glycoside", "Insulin, causing hypoglycemia", "Heparin, causing bleeding"],
+    correct: 0,
+    explain: "Vaught administered vecuronium — a paralytic that stops all voluntary muscles including the diaphragm — after overriding the Pyxis system and selecting the wrong medication. The patient died of respiratory arrest."
+  },
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "Which system failure at Vanderbilt contributed to the RaDonda Vaught error, beyond her individual mistake?",
+    choices: ["The hospital had too few medications available", "A Pyxis safety feature requiring diagnosis selection before override had been disabled for \"efficiency,\" and overriding was routine practice on the unit", "The patient refused to confirm their identity", "There were no other system factors involved"],
+    correct: 1,
+    explain: "Vanderbilt had disabled a safety feature, override was routine (35 alerts overridden on Vaught's shift alone), she was on an accelerated orientation with less supervised practice, and the hospital did not report the death to the state board for two years."
+  },
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "In the Just Culture framework, which category describes \"choosing a shortcut that increases risk without recognizing the danger\"?",
+    choices: ["Human error", "At-risk behavior", "Reckless behavior", "Malpractice"],
+    correct: 1,
+    explain: "At-risk behavior is a shortcut taken without recognizing the risk it introduces — the response should be to coach, educate, and redesign the system, distinct from human error (console/support/system fix) or reckless behavior (remediation/discipline)."
+  },
+  {
+    cat: "8. High-Alert Medications & Just Culture",
+    q: "What is the ANA's stated position (2022) on criminal prosecution of nurses for medication errors?",
+    choices: ["It fully supports criminal prosecution in all medication error cases", "It argues criminal prosecution undermines a safety culture, making nurses less likely to report errors out of fear", "It has no official position on the issue", "It only supports prosecution for high-alert medication errors"],
+    correct: 1,
+    explain: "The ANA's 2022 position is that criminal prosecution of nurses for medication errors undermines a safety culture — nurses become less likely to report errors when they fear prosecution, which ultimately makes patients less safe."
+  },
+
+  // ===================== 9. ROUTES OF ADMINISTRATION & PHARMACOKINETICS =====================
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "In the ADME pharmacokinetics framework, what does the 'M' stand for?",
+    choices: ["Monitoring", "Metabolism", "Measurement", "Maintenance"],
+    correct: 1,
+    explain: "ADME = Absorption, Distribution, Metabolism, Excretion. Metabolism is how the drug is chemically transformed, usually by the liver — this is where the first-pass effect occurs for oral medications."
+  },
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "Why are IV doses of a drug often lower than oral doses of the same drug?",
+    choices: ["IV medications are less concentrated by law", "Oral drugs undergo first-pass metabolism in the liver before reaching systemic circulation, while IV bypasses this entirely", "IV medications are always weaker formulations", "There is no difference in required dose between routes"],
+    correct: 1,
+    explain: "The first-pass effect means oral drugs are partially metabolized by the liver before reaching systemic circulation, so a higher oral dose is often needed to achieve the same effect as a lower IV dose, which bypasses this process."
+  },
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "Which route of administration has the fastest onset but is also considered the most dangerous due to irreversibility of errors?",
+    choices: ["Oral (PO)", "Subcutaneous (SQ)", "Intravenous (IV)", "Transdermal"],
+    correct: 2,
+    explain: "IV has the fastest onset (seconds to minutes) and bypasses first-pass metabolism, but it is also the most dangerous route because errors are largely irreversible once administered."
+  },
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "Which injection site is preferred for adult intramuscular injections because it is free of major nerves and blood vessels?",
+    choices: ["Dorsogluteal (buttock)", "Ventrogluteal", "Deltoid, for all volumes", "Vastus lateralis only, never used in adults"],
+    correct: 1,
+    explain: "Ventrogluteal is the preferred adult IM site — free of major nerves/vessels. Dorsogluteal is no longer recommended due to sciatic nerve injury risk; deltoid is limited to small volumes (≤1 mL); vastus lateralis is also acceptable in adults and preferred in infants/young children."
+  },
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "Why must renal function (eGFR, BUN, creatinine) be checked before giving many medications, per the ADME framework?",
+    choices: ["Renal function has no relationship to medication safety", "Excretion primarily happens via the kidneys, and renal impairment causes drugs to accumulate", "Only the liver affects how drugs are cleared", "This is only relevant for topical medications"],
+    correct: 1,
+    explain: "Excretion — the final ADME step — happens primarily via the kidneys. Renal impairment means drugs accumulate rather than clearing normally, which is why renal function is checked before many medications, including metformin."
+  },
+  {
+    cat: "9. Routes of Administration & ADME",
+    q: "For subcutaneous enoxaparin (Lovenox) injections, what should the nurse NOT do after injecting?",
+    choices: ["Rotate the site for the next dose", "Rub the injection site or expel the air bubble from a prefilled syringe", "Document the site on a rotation diagram", "Monitor platelets for HIT"],
+    correct: 1,
+    explain: "Rubbing the site after enoxaparin injection causes bruising and alters absorption, and the air bubble in a prefilled syringe should NOT be expelled — both are specific technique points the lecture emphasizes."
+  },
+
+  // ===================== 10. MEDICATION RECONCILIATION & PATIENT EDUCATION =====================
+  {
+    cat: "10. Medication Reconciliation & Patient Education",
+    q: "Medication reconciliation means:",
+    choices: ["Only reviewing medications the hospital pharmacy dispensed", "Comparing a patient's current medication orders against everything they've actually been taking — home meds, OTC, supplements, herbals, vitamins", "A process performed only by pharmacists, never nurses", "A one-time check performed only at admission"],
+    correct: 1,
+    explain: "Medication reconciliation compares current orders against ALL medications a patient has actually been taking, including home medications, OTC drugs, supplements, and herbals — and it's required at every transition of care, not just admission, and not just by pharmacists."
+  },
+  {
+    cat: "10. Medication Reconciliation & Patient Education",
+    q: "In the lecture's example, what dangerous interaction did a nurse catch during medication reconciliation?",
+    choices: ["A patient taking St. John's Wort while also being ordered warfarin", "A patient taking two different insulins simultaneously", "A patient allergic to penicillin being prescribed amoxicillin", "A patient taking expired medications"],
+    correct: 0,
+    explain: "A patient taking St. John's Wort (an herbal supplement) for depression was newly ordered warfarin — the nurse caught this during medication reconciliation and avoided a potentially fatal drug interaction."
+  },
+  {
+    cat: "10. Medication Reconciliation & Patient Education",
+    q: "Which of these is a core element of proper medication teaching, per the lecture?",
+    choices: ["Drug name (generic and brand), purpose, dose/schedule, how to take it, side effects, and what to do if a dose is missed", "Only the drug's brand name is necessary", "Teaching is optional if the patient has taken the medication before", "Only serious side effects need to be discussed, not common ones"],
+    correct: 0,
+    explain: "Complete medication teaching covers the drug name (both generic and brand), purpose, dose and schedule, administration instructions, common AND serious side effects to report, and what to do if a dose is missed."
+  },
+  {
+    cat: "10. Medication Reconciliation & Patient Education",
+    q: "What does \"Right Education\" mean within the broader Ten Rights framework?",
+    choices: ["Education is a separate process unrelated to medication administration", "If a medication is given without teaching, the medication administration process is not complete", "Only the pharmacist is responsible for patient education", "Education is only required for new medications, never long-term ones"],
+    correct: 1,
+    explain: "The lecture states plainly: if you give a medication without teaching, you have not completed the medication process — education is an integral, not optional, part of safe administration."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const missed = [];
+const catStats = {};
+
+const card = document.getElementById("quizCard");
+const progressText = document.getElementById("progressText");
+const traceFill = document.getElementById("traceFill");
+const catBar = document.getElementById("catBar");
+
+document.getElementById("progressText").innerHTML = "<strong>1</strong> / " + QUESTIONS.length;
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  progressText.innerHTML = "<strong>" + (current + 1) + "</strong> / " + QUESTIONS.length;
+  catBar.textContent = item.cat;
+  traceFill.style.setProperty("--reveal", (100 - ((current) / QUESTIONS.length) * 100) + "%");
+
+  card.innerHTML = "";
+
+  const qnum = document.createElement("div");
+  qnum.className = "qnum";
+  qnum.textContent = "Question " + (current + 1) + " of " + QUESTIONS.length;
+  card.appendChild(qnum);
+
+  const qtext = document.createElement("p");
+  qtext.className = "qtext";
+  qtext.textContent = item.q;
+  card.appendChild(qtext);
+
+  const choicesWrap = document.createElement("div");
+  choicesWrap.className = "choices";
+
+  item.choices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choiceText;
+    btn.addEventListener("click", () => handleAnswer(idx, btn, choicesWrap, item));
+    choicesWrap.appendChild(btn);
+  });
+
+  card.appendChild(choicesWrap);
+
+  const explain = document.createElement("div");
+  explain.className = "explain";
+  explain.id = "explainBox";
+  explain.innerHTML = "<b>Why:</b> " + item.explain;
+  card.appendChild(explain);
+
+  const footerRow = document.createElement("div");
+  footerRow.className = "footer-row";
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "next-btn";
+  nextBtn.id = "nextBtn";
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? "See results" : "Next question";
+  nextBtn.addEventListener("click", goNext);
+  footerRow.appendChild(nextBtn);
+  card.appendChild(footerRow);
+}
+
+function handleAnswer(idx, btn, choicesWrap, item) {
+  if (answered) return;
+  answered = true;
+
+  if (!catStats[item.cat]) catStats[item.cat] = { correct: 0, total: 0 };
+  catStats[item.cat].total++;
+
+  const buttons = choicesWrap.querySelectorAll(".choice");
+  buttons.forEach((b) => (b.disabled = true));
+
+  if (idx === item.correct) {
+    btn.classList.add("correct");
+    score++;
+    catStats[item.cat].correct++;
+  } else {
+    btn.classList.add("incorrect");
+    buttons[item.correct].classList.add("reveal-correct");
+    missed.push({ q: item.q, explain: item.explain, cat: item.cat });
+  }
+
+  document.getElementById("explainBox").classList.add("show");
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function goNext() {
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    renderResults();
+  }
+}
+
+function renderResults() {
+  traceFill.style.setProperty("--reveal", "0%");
+  progressText.innerHTML = "<strong>Done</strong>";
+  catBar.textContent = "";
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let verdict;
+  if (pct >= 90) verdict = "Excellent command of Week 3 across every study guide bullet — you're in strong shape for the exam on this material.";
+  else if (pct >= 75) verdict = "Solid overall grasp. Check the category breakdown below and review your weakest section.";
+  else if (pct >= 50) verdict = "Foundation is there, but several areas need another pass — use the category breakdown to target your remaining study time.";
+  else verdict = "Worth another full pass through the study guide and lecture — this material is heavily tested.";
+
+  card.innerHTML = "";
+  const results = document.createElement("div");
+  results.className = "results";
+
+  results.innerHTML =
+    '<div class="score-big">' + score + " / " + QUESTIONS.length + "</div>" +
+    '<div class="score-label">' + pct + "% correct</div>" +
+    '<div class="verdict">' + verdict + "</div>";
+
+  const catList = document.createElement("ul");
+  catList.className = "cat-breakdown";
+  Object.keys(catStats).forEach((cat) => {
+    const stat = catStats[cat];
+    const li = document.createElement("li");
+    li.innerHTML = "<span>" + cat + "</span><b>" + stat.correct + " / " + stat.total + "</b>";
+    catList.appendChild(li);
+  });
+  results.appendChild(catList);
+
+  if (missed.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "missed-list";
+    missed.forEach((m) => {
+      const li = document.createElement("li");
+      li.innerHTML = "<b>" + m.q + "</b><br>" + m.explain;
+      list.appendChild(li);
+    });
+    results.appendChild(list);
+  }
+
+  const restartBtn = document.createElement("button");
+  restartBtn.className = "restart-btn";
+  restartBtn.textContent = "Retake quiz";
+  restartBtn.addEventListener("click", () => {
+    current = 0;
+    score = 0;
+    missed.length = 0;
+    Object.keys(catStats).forEach((k) => delete catStats[k]);
+    renderQuestion();
+  });
+  results.appendChild(restartBtn);
+
+  card.appendChild(results);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>

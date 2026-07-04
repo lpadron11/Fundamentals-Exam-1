@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURS 3200 — Week 1 Study Guide Quiz</title>
+<style>
+  :root {
+    --navy: #1E2761;
+    --navy-deep: #141B47;
+    --ice: #CADCFC;
+    --ice-pale: #EEF3FD;
+    --paper: #FAFBFD;
+    --ink: #1B2233;
+    --muted: #5B6478;
+    --good: #1E6E4E;
+    --good-bg: #E3F3EA;
+    --bad: #A3312A;
+    --bad-bg: #FBE9E7;
+    --line: #1E276122;
+    --serif: Cambria, "Times New Roman", Georgia, serif;
+    --sans: Calibri, Arial, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .app { width: 100%; max-width: 700px; }
+
+  .trace-wrap { position: relative; height: 46px; margin-bottom: 6px; overflow: hidden; }
+  .trace-track { position: absolute; inset: 0; }
+  .trace-fill {
+    position: absolute; inset: 0;
+    clip-path: inset(0 var(--reveal, 100%) 0 0);
+    transition: clip-path .5s ease;
+  }
+  .trace-track svg, .trace-fill svg { width: 100%; height: 100%; display: block; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .topbar strong { color: var(--navy); }
+  .catbar {
+    font-size: 11px; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--navy); font-weight: 700; margin: 2px 0 0;
+  }
+
+  h1 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin: 16px 0 2px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; line-height: 1.45; }
+  .note {
+    font-size: 12px; color: var(--muted); background: var(--ice-pale);
+    border-radius: 7px; padding: 9px 12px; margin: 0 0 22px; line-height: 1.5;
+  }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 26px 26px 22px; box-shadow: 0 1px 2px rgba(30,39,97,.04);
+  }
+
+  .qnum { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .qtext { font-size: 17px; line-height: 1.45; margin: 0 0 20px; color: var(--navy-deep); font-weight: 600; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    text-align: left; background: var(--ice-pale); border: 1px solid transparent;
+    border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-family: var(--sans);
+    color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+  }
+  .choice:hover:not(:disabled) { background: var(--ice); }
+  .choice:active:not(:disabled) { transform: scale(.997); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); font-weight: 600; }
+  .choice.reveal-correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+
+  .explain {
+    margin-top: 18px; padding: 14px 16px; background: var(--ice-pale);
+    border-left: 3px solid var(--navy); border-radius: 0 8px 8px 0;
+    font-size: 13.5px; line-height: 1.55; color: var(--ink); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+  .srcflag {
+    display: inline-block; margin-top: 8px; font-size: 11px; color: var(--muted);
+    font-style: italic;
+  }
+
+  .footer-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .next-btn {
+    background: var(--navy); color: #fff; border: none; border-radius: 7px;
+    padding: 11px 22px; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .15s;
+  }
+  .next-btn.show { opacity: 1; pointer-events: auto; }
+  .next-btn:hover { background: var(--navy-deep); }
+
+  .results { text-align: center; padding: 10px 8px 4px; }
+  .score-big { font-family: var(--serif); font-size: 52px; color: var(--navy); font-weight: 700; margin: 6px 0 0; }
+  .score-label { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  .verdict { font-size: 15px; color: var(--ink); margin-bottom: 22px; line-height: 1.5; }
+
+  .cat-breakdown { text-align: left; margin: 0 0 24px; padding: 0; list-style: none; }
+  .cat-breakdown li {
+    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
+    background: var(--ice-pale); border-radius: 7px; margin-bottom: 6px; font-size: 13px;
+  }
+  .cat-breakdown b { color: var(--navy); white-space: nowrap; }
+
+  .missed-list { text-align: left; margin: 0 0 26px; padding: 0; list-style: none; }
+  .missed-list li {
+    padding: 10px 14px; background: var(--ice-pale); border-radius: 7px;
+    margin-bottom: 8px; font-size: 13px; line-height: 1.5;
+  }
+  .missed-list li b { color: var(--navy); }
+
+  .restart-btn {
+    background: transparent; color: var(--navy); border: 1.5px solid var(--navy);
+    border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 600;
+    font-family: var(--sans); cursor: pointer;
+  }
+  .restart-btn:hover { background: var(--ice-pale); }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 18px; }
+    .qtext { font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="trace-wrap" aria-hidden="true">
+    <div class="trace-track">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#CADCFC" stroke-width="3"/></svg>
+    </div>
+    <div class="trace-fill" id="traceFill">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#1E2761" stroke-width="3"/></svg>
+    </div>
+  </div>
+  <div class="topbar">
+    <span>NURS 3200 · Week 1</span>
+    <span id="progressText"><strong>1</strong> / 50</span>
+  </div>
+  <div class="catbar" id="catBar"></div>
+
+  <h1>Week 1 — Study Guide Quiz</h1>
+  <p class="sub">Organized around each bullet of your Week 1 study guide, in order. Questions draw from the lecture (Elena case, trauma-informed care), the OpenStax reading packet, and the study guide answers.</p>
+  <p class="note">A few questions on Clara Barton, Virginia Henderson, and Hildegard Peplau go beyond what your lecture slides and this reading packet covered — they're included because the study guide names them by name. Double-check these against Lewis Ch. 1 if your instructor tests them in more depth.</p>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===================== 1. HISTORICAL NURSING FIGURES =====================
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Florence Nightingale reduced ward mortality during the Crimean War (1853) from what rate to what rate through sanitation reform?",
+    choices: ["42% to 2%", "60% to 15%", "30% to 5%", "50% to 20%"],
+    correct: 0,
+    explain: "Nightingale's sanitation reforms reduced ward mortality from 42% to 2%, proving the environment itself is a determinant of health — before germ theory existed."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Nightingale's four-concept metaparadigm of nursing — still the foundation every nursing theory builds on or responds to — consists of:",
+    choices: ["Assessment, Diagnosis, Planning, Evaluation", "Human, Environment, Health, Nursing", "Safety, Quality, Informatics, Teamwork", "Body, Mind, Spirit, Community"],
+    correct: 1,
+    explain: "Nightingale's four concepts — Human, Environment, Health, Nursing — remain the metaparadigm of nursing."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Which nurse was rejected from Nightingale's corps because of race, self-funded her own field hospital in the Crimean War, and was erased from nursing history for over a century?",
+    choices: ["Mary Eliza Mahoney", "Susie Walking Bear Yellowtail", "Mary Seacole", "Mabel Keaton Staupers"],
+    correct: 2,
+    explain: "Mary Seacole (1805–1881), a Jamaican-Scottish healer, built her own hospital after being denied a place in Nightingale's corps."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Who was the first professionally trained Black nurse in the US (1879) and co-founded the National Association of Colored Graduate Nurses?",
+    choices: ["Mary Eliza Mahoney", "Susie Walking Bear Yellowtail", "Mabel Keaton Staupers", "Mary Seacole"],
+    correct: 0,
+    explain: "Mary Eliza Mahoney (1845–1926) was the first professionally trained Black nurse in the US and fought segregation in nursing education through the organization she co-founded."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Which nurse was the first Native American RN and exposed forced sterilization of Native women in Indian Health Service hospitals?",
+    choices: ["Susie Walking Bear Yellowtail", "Mabel Keaton Staupers", "Mary Seacole", "Mary Eliza Mahoney"],
+    correct: 0,
+    explain: "Susie Walking Bear Yellowtail (1903–1981) advocated for culturally safe care decades before the term existed, and exposed forced sterilization practices."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Clara Barton is most historically associated with founding:",
+    choices: ["The first nursing school in the US", "The American Red Cross", "The American Nurses Association", "The Nightingale Training School"],
+    correct: 1,
+    explain: "Clara Barton founded the American Red Cross (1881), building on her Civil War-era battlefield nursing and relief work."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Virginia Henderson is best known for:",
+    choices: ["The Culture Care Theory", "Defining nursing in terms of helping patients meet 14 basic human needs toward independence", "Founding the ANA", "The interpersonal relations theory of nursing"],
+    correct: 1,
+    explain: "Virginia Henderson's definition of nursing centers on assisting individuals — sick or well — in performing activities contributing to health, recovery, or peaceful death, organized around 14 basic needs, with the goal of independence as soon as possible."
+  },
+  {
+    cat: "1. Historical Nursing Figures",
+    q: "Hildegard Peplau is often called the 'mother of psychiatric nursing' for developing:",
+    choices: ["The Health Belief Model", "The Interpersonal Relations Theory, focused on the nurse-patient relationship", "The Culture Care Theory", "The Transcultural Assessment Model"],
+    correct: 1,
+    explain: "Peplau's Interpersonal Relations Theory frames nursing as a significant, therapeutic, interpersonal process, unfolding through phases of the nurse-patient relationship."
+  },
+
+  // ===================== 2. NURSING AS A PROFESSION =====================
+  {
+    cat: "2. Nursing as a Profession",
+    q: "Which of the following are the six QSEN core competencies?",
+    choices: ["Patient-centered care, teamwork/collaboration, EBP, quality improvement, safety, informatics", "Assessment, diagnosis, planning, implementation, evaluation, documentation", "Caregiver, advocate, educator, communicator, leader, decision-maker", "Autonomy, beneficence, nonmaleficence, justice, fidelity, veracity"],
+    correct: 0,
+    explain: "QSEN's six core competencies are patient-centered care, teamwork and collaboration, evidence-based practice, quality improvement, safety, and informatics."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "The 'art' of nursing (compassion, therapeutic presence, cross-cultural communication) and the 'science' of nursing (EBP, critical thinking, data analysis) together represent:",
+    choices: ["Two competing philosophies nurses must choose between", "The dual nature of nursing, both essential for holistic patient care", "Outdated framework no longer taught", "Only the responsibility of APRNs, not RNs"],
+    correct: 1,
+    explain: "The integration of art and science is essential for holistic patient care — the art ensures a human-centered, compassionate approach, while the science provides the evidence-based foundation for quality care."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "Which ethical principle means 'nurses have an obligation to do no harm intentionally' — e.g., double-checking a patient's allergies before giving medication?",
+    choices: ["Beneficence", "Nonmaleficence", "Autonomy", "Justice"],
+    correct: 1,
+    explain: "Nonmaleficence = do no harm. Beneficence = do good/promote well-being. Autonomy = the patient's right to decide. Justice = fairness and equity. Confidentiality = safeguarding health information."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "A nurse discussing treatment options with a patient and allowing them to make an informed decision aligned with their personal values is demonstrating:",
+    choices: ["Justice", "Autonomy", "Nonmaleficence", "Confidentiality"],
+    correct: 1,
+    explain: "Autonomy is the principle that an individual has the right to make their own decisions about their life and body, even when different from what providers recommend."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "A nurse's scope of practice — the legal boundaries of what they are authorized to do — is primarily defined by:",
+    choices: ["The hospital's HR department", "The state Board of Nursing (BON), informed by organizations like the ANA and ICN", "Whichever physician the nurse is working with that shift", "The patient's insurance company"],
+    correct: 1,
+    explain: "State Boards of Nursing establish and regulate scope of practice, licensing, and educational requirements; the ANA and ICN provide broader professional guidance but licensure/scope is state-specific."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "An EHR (Electronic Health Record) differs from an EMR (Electronic Medical Record) in that:",
+    choices: ["EHRs are paper-based and EMRs are digital", "An EHR is shared across multiple providers; an EMR is maintained by a single provider, and EMRs are intended to feed into the EHR", "There is no meaningful difference", "EMRs are only used in tertiary care settings"],
+    correct: 1,
+    explain: "An EHR is a digital medical history maintained and shared across multiple providers; an EMR is used by only a single provider, and ideally feeds into the broader EHR."
+  },
+  {
+    cat: "2. Nursing as a Profession",
+    q: "According to the HESI high-yield points in the lecture, which nursing role is the MOST tested on HESI Fundamentals exams, tied to the ANA's definition of nursing?",
+    choices: ["Educator", "Advocate", "Manager of care", "Leader"],
+    correct: 1,
+    explain: "Advocacy is the most tested professional role on HESI Fundamentals — the ANA defines nursing as the protection, promotion, and optimization of health and abilities 'through... advocacy.'"
+  },
+
+  // ===================== 3. EVIDENCE-BASED PRACTICE =====================
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "Put the five EBP steps in the correct order.",
+    choices: ["Acquire → Ask → Apply → Appraise → Evaluate", "Ask → Acquire → Appraise → Apply → Evaluate", "Ask → Appraise → Acquire → Evaluate → Apply", "Appraise → Ask → Acquire → Apply → Evaluate"],
+    correct: 1,
+    explain: "Ask (form a PICO question) → Acquire (search evidence) → Appraise (evaluate quality/relevance) → Apply (integrate with clinical expertise + patient values) → Evaluate (did it work for this patient?)."
+  },
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "In a PICO question, the 'C' stands for:",
+    choices: ["Care", "Context", "Comparison", "Community"],
+    correct: 2,
+    explain: "PICO = Patient, Intervention, Comparison, Outcome."
+  },
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "The three pillars underlying evidence-based practice are best research evidence, patient values & goals, and:",
+    choices: ["Hospital policy", "Clinical expertise", "Insurance coverage", "Peer review"],
+    correct: 1,
+    explain: "The three EBP pillars are best research evidence, clinical expertise, and patient values/goals — EBP is about grounding clinical judgment in evidence, not replacing it."
+  },
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "A nurse searches PubMed, CINAHL, and the Cochrane Library for research related to a clinical question. Which EBP step is this?",
+    choices: ["Ask", "Acquire", "Appraise", "Apply"],
+    correct: 1,
+    explain: "Acquire is the step where the nurse searches the evidence using databases like PubMed, CINAHL, Cochrane Library, or UpToDate."
+  },
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "A nurse determines that a study's population and setting are similar enough to their own patient to be relevant, and checks the rigor of the study design. Which EBP step is this?",
+    choices: ["Acquire", "Appraise", "Apply", "Evaluate"],
+    correct: 1,
+    explain: "Appraise involves evaluating the quality, relevance, and applicability of evidence to your specific patient population — distinct from Acquire (searching) or Apply (integrating with practice)."
+  },
+  {
+    cat: "3. Evidence-Based Practice",
+    q: "In the Elena case, evidence shows Latina women are less likely to have hypertension diagnosed, treated, or controlled than non-Hispanic white women. What does the lecture emphasize is the reason for this disparity?",
+    choices: ["Genetic differences in blood pressure regulation", "Access and system-level failures, not biology", "Latina patients refusing treatment more often", "Lower rates of hypertension in this population overall"],
+    correct: 1,
+    explain: "The lecture is explicit: the disparity is due to access and system-level failures — not biology — reinforcing that applying EBP requires understanding the systemic context behind the data."
+  },
+
+  // ===================== 4. LEVELS OF CARE =====================
+  {
+    cat: "4. Levels of Care",
+    q: "In the healthcare pyramid, which level of care is the broad base that most people rely on most of the time?",
+    choices: ["Tertiary care", "Secondary care", "Primary care", "Restorative care"],
+    correct: 2,
+    explain: "Primary care is the most fundamental level — first point of contact, health promotion, annual physicals — and forms the base that supports the rest of the system."
+  },
+  {
+    cat: "4. Levels of Care",
+    q: "A community clinic providing prenatal visits and annual physicals — a patient's first point of contact — is an example of:",
+    choices: ["Primary care", "Secondary care", "Tertiary care", "Continuing care"],
+    correct: 0,
+    explain: "Primary care is the first point of contact for health promotion and routine care, like the community clinic Elena visits."
+  },
+  {
+    cat: "4. Levels of Care",
+    q: "A patient is referred from their PCP to a cardiologist for evaluation of heart palpitations. This is:",
+    choices: ["Primary care", "Secondary care", "Tertiary care", "Preventive care"],
+    correct: 1,
+    explain: "Secondary care includes specialists like cardiologists, urologists, and pulmonologists who receive referrals from primary care for more complex evaluation and management."
+  },
+  {
+    cat: "4. Levels of Care",
+    q: "Which pairing correctly matches a secondary provider with the corresponding tertiary provider who offers more advanced/surgical management of the same body system?",
+    choices: ["Pulmonologist → Radiologist", "Cardiologist → Cardiothoracic surgeon", "Dermatologist → Gastroenterologist", "Urologist → Pediatrician"],
+    correct: 1,
+    explain: "A cardiologist (secondary) treats cardiac issues medically; a cardiothoracic surgeon (tertiary) treats cardiac issues AND performs cardiac surgery."
+  },
+  {
+    cat: "4. Levels of Care",
+    q: "ICU care, oncology, and neurosurgery — complex, high-acuity management where access is not equal — represent which level of care?",
+    choices: ["Secondary", "Tertiary", "Restorative", "Preventive"],
+    correct: 1,
+    explain: "Tertiary care involves complex, high-acuity specialty management (ICU, cardiology, oncology, neurosurgery) — the top of the pyramid, with fewer facilities and less equal access."
+  },
+  {
+    cat: "4. Levels of Care",
+    q: "A patient without a primary care provider who typically enters the healthcare system directly at the emergency department for non-urgent concerns will generally experience:",
+    choices: ["Better outcomes and lower costs", "Poorer outcomes and higher overall costs", "No measurable difference in outcomes", "Faster access to tertiary specialists"],
+    correct: 1,
+    explain: "Patients without a PCP often enter the system at a higher level of the pyramid, which studies show results in poorer outcomes and higher overall costs compared to consistent primary care."
+  },
+
+  // ===================== 5. BARRIERS TO HEALTHCARE ACCESS =====================
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "Which of these is a STRUCTURAL barrier to healthcare access, as opposed to a social/historical one?",
+    choices: ["Distrust rooted in medical racism", "Low health literacy", "Lack of qualified medical interpreters (language access)", "Prior negative encounters with providers"],
+    correct: 2,
+    explain: "Structural barriers include insurance, language access, immigration status, geography/transportation, and work schedule. Social & historical barriers include distrust, health literacy, cultural differences, and prior negative encounters."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "According to the lecture, what is the single most powerful predictor of care avoidance?",
+    choices: ["Lack of insurance", "Prior negative encounters with the healthcare system", "Distance from a clinic", "Low health literacy"],
+    correct: 1,
+    explain: "Prior negative encounters were flagged as the single most powerful predictor of care avoidance — which is why avoidance should never be documented as 'noncompliance' without investigating the cause."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "A federally designated area with an insufficient number of primary care, dental, or mental health providers for its population is called a:",
+    choices: ["Restorative Care Zone", "Health Professional Shortage Area (HPSA)", "Tertiary Access District", "Medical Desert Region"],
+    correct: 1,
+    explain: "HPSAs are federally designated based on geography, specific populations, or facilities lacking sufficient healthcare providers — in 2021 there were over 8,000 HPSAs needing primary care practitioners nationwide."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "'White-coat syndrome,' where a patient's anxiety/mistrust around providers can elevate vital signs like blood pressure, is an example of a barrier that is:",
+    choices: ["Extrinsic (systemic)", "Intrinsic (related to personal thoughts/beliefs)", "Structural", "Legal"],
+    correct: 1,
+    explain: "Intrinsic barriers relate to personal thoughts, values, and beliefs — like distrust or white-coat syndrome. Extrinsic barriers are systemic issues outside the individual, like systemic racism or infrastructure."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "A domestic worker who works six days a week with no paid time off and cannot make a Monday–Friday, 9-to-5 clinic appointment is facing which type of barrier?",
+    choices: ["Cultural barrier", "Structural barrier (work schedule)", "Health literacy barrier", "Legal barrier"],
+    correct: 1,
+    explain: "Work schedule is a structural barrier — domestic, gig, and agricultural workers often cannot miss a shift to seek care, which is exactly Elena's situation in the case study."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "One of the ACA's (Affordable Care Act) main goals, per the reading, was to:",
+    choices: ["Eliminate all private insurance", "Make insurance more affordable for those between 100–400% of the federal poverty level and expand Medicaid", "Require all hospitals to become tertiary care centers", "Remove state Boards of Nursing"],
+    correct: 1,
+    explain: "The ACA aimed to make insurance more affordable for people between 100–400% of the federal poverty level, expand Medicaid to cover adults below 138% of the federal poverty level, and lower costs while maintaining/improving care."
+  },
+  {
+    cat: "5. Barriers to Healthcare Access",
+    q: "Elena's nine-year gap in care should be understood by the nurse as:",
+    choices: ["Evidence that she doesn't value her health", "A rational, protective response to a system that failed her — not irrationality or noncompliance", "A sign she distrusts all medicine, traditional and modern", "Unrelated to systemic barriers"],
+    correct: 1,
+    explain: "The lecture frames Elena as not noncompliant, but rational: the system failed her and she protected herself. This reflects institutional trauma, not a personal failing."
+  },
+
+  // ===================== 6. TRAUMA-INFORMED CARE =====================
+  {
+    cat: "6. Trauma-Informed Care",
+    q: "What percentage of US adults have experienced at least one traumatic event, per the lecture?",
+    choices: ["Up to 70%", "About 25%", "Up to 90%", "About 50%"],
+    correct: 0,
+    explain: "Trauma is pervasive — up to 70% of US adults have experienced at least one traumatic event, and ACEs (Adverse Childhood Experiences) affect 64% of adults."
+  },
+  {
+    cat: "6. Trauma-Informed Care",
+    q: "An ACE (Adverse Childhood Experience) score of 4 or more is associated with how much higher risk of depression, suicide, substance use, and chronic disease?",
+    choices: ["1.5–2x higher", "4–12x higher", "20–30x higher", "No measurable increase"],
+    correct: 1,
+    explain: "An ACE score of 4+ is associated with a 4–12x higher risk of depression, suicide, substance use, and chronic disease."
+  },
+  {
+    cat: "6. Trauma-Informed Care",
+    q: "The core principle of trauma-informed care is:",
+    choices: ["Always directly ask patients whether they have a trauma history before proceeding", "Assume trauma exposure in every patient and practice accordingly, always", "Only apply trauma precautions to patients with a documented ACE score", "Refer any suspected trauma patient to psychiatry before continuing care"],
+    correct: 1,
+    explain: "Trauma-informed care does not require knowing a patient's specific trauma history — the principle is to assume trauma exposure in every patient and practice accordingly, always."
+  },
+  {
+    cat: "6. Trauma-Informed Care",
+    q: "Which of these IS one of the four CDC trauma-informed care principles detailed in the lecture?",
+    choices: ["Standardization & Efficiency", "Trustworthiness & Transparency", "Financial Sustainability", "Provider Convenience"],
+    correct: 1,
+    explain: "The four detailed were Safety, Trustworthiness & Transparency, Peer Support, and Collaboration & Mutuality. (Empowerment & Choice and Cultural/Historical/Gender Issues were named but not detailed in the slides.)"
+  },
+  {
+    cat: "6. Trauma-Informed Care",
+    q: "Elena flinches when the nurse reaches to check her blood pressure, without saying anything or pulling away. Through a trauma-informed lens, the best nursing action is to:",
+    choices: ["Proceed quickly so as not to draw attention to it", "Explain each action before taking it and ask permission before touching, per the Safety principle", "Document that the patient is uncooperative", "Ignore it since she didn't verbally object"],
+    correct: 1,
+    explain: "The Safety principle calls for explaining every action before taking it and asking permission before touching — directly addressing what Elena's flinch signals without requiring her to disclose why."
+  },
+
+  // ===================== 7. CULTURALLY COMPETENT ASSESSMENT =====================
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "In the Campinha-Bacote model, examining your own biases before assessing a patient is called:",
+    choices: ["Cultural Skill", "Cultural Desire", "Cultural Awareness", "Cultural Encounter"],
+    correct: 2,
+    explain: "Cultural Awareness = self-examination of your own biases. The other constructs: Knowledge (understanding cultural practices), Skill (conducting the assessment, using an interpreter), Encounter (curiosity, not a checklist), Desire (genuine motivation, not obligation)."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "The Four Cs of Culture assessment model asks about Considers, Cause, Coping, and:",
+    choices: ["Community", "Concerned", "Confidentiality", "Compliance"],
+    correct: 1,
+    explain: "The Four Cs: what the patient Considers to be the problem, what they think Caused it, how they are Coping with it, and how Concerned they are about it."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "Per Giger and Davidhizar's Transcultural Assessment Model, the six cultural phenomena to assess include communication, personal space, social organization, environmental control, biologic variations, and:",
+    choices: ["Time orientation", "Financial status", "Educational attainment", "Religious denomination"],
+    correct: 0,
+    explain: "The six cultural phenomena are communication, personal space, social organization, time orientation, environmental control, and biologic variations."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "A patient from a collectivistic culture defers major treatment decisions to their extended family rather than deciding alone. This reflects:",
+    choices: ["Poor health literacy", "A psychological difference — collectivistic cultures emphasize community decision-making over individual autonomy", "Noncompliance", "A lack of capacity to consent"],
+    correct: 1,
+    explain: "Collectivistic cultures (common in many Eastern countries) emphasize community and cooperation in decision-making, distinct from individualistic cultures (common in the US) that emphasize personal autonomy."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "Which hereditary condition is most strongly associated with Ashkenazi Jewish ancestry?",
+    choices: ["Sickle cell anemia", "Thalassemia", "Tay-Sachs disease", "Cystic fibrosis only"],
+    correct: 2,
+    explain: "Tay-Sachs disease is strongly associated with Ashkenazi Jewish ancestry (along with cystic fibrosis and Gaucher disease). Sickle cell is linked to African/Mediterranean ancestry; thalassemia to Asian/Mediterranean ancestry."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "Curanderismo, practiced by curanderos/curanderas using prayer, oils, herbs, and special diets, is a holistic healing tradition most associated with:",
+    choices: ["Traditional Chinese Medicine", "Hispanic traditions", "American Indian traditions", "Western European traditions"],
+    correct: 1,
+    explain: "Curanderismo is rooted in Hispanic tradition, focused on balance of mind, body, and spirit; curanderos also act as counselors and social workers."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "A nurse who believes conventional Western medicine is inherently superior to a patient's traditional healing practices is displaying:",
+    choices: ["Cultural humility", "Ethnocentrism", "Cultural self-awareness", "Transcultural nursing"],
+    correct: 1,
+    explain: "Ethnocentrism is the belief that one's own culture is better than another's. Cultural self-awareness — recognizing one's own biases — helps nurses avoid it."
+  },
+  {
+    cat: "7. Culturally Competent Assessment",
+    q: "Elena's tea likely contains hibiscus (jamaica), which has moderate evidence of mild antihypertensive effects. According to the lecture, how should the nurse respond to this?",
+    choices: ["Tell Elena to stop drinking it immediately since it's not FDA-approved", "Dismiss it as irrelevant to her care", "Understand it and use it to establish common ground, not dismiss it", "Document it as evidence of noncompliance with medical treatment"],
+    correct: 2,
+    explain: "The lecture is explicit: Elena's tea use 'is not a reason to dismiss it. It is a reason to understand it. To establish common ground' — reflecting Cultural Skill (asking about traditional remedies) rather than judgment."
+  },
+
+  // ===================== 8. MEDICAL INTERPRETERS =====================
+  {
+    cat: "8. Medical Interpreters vs. Family Members",
+    q: "Why should a certified medical interpreter be used instead of a family member for a patient with limited English proficiency?",
+    choices: ["Family members are legally barred from interpreting", "It's simply faster to schedule an interpreter", "A family member isn't trained, may be emotionally involved, and can introduce errors affecting informed consent", "Family members always refuse to help"],
+    correct: 2,
+    explain: "A family member is not a trained medical interpreter and may be emotionally invested (e.g., managing their own anxiety about the patient), risking translation errors that affect informed consent and understanding of diagnosis/plan of care."
+  },
+  {
+    cat: "8. Medical Interpreters vs. Family Members",
+    q: "In the Elena case, her daughter Marisol translates for her at the clinic visit. What does the lecture identify as a concern with this arrangement?",
+    choices: ["Marisol is fluent in medical terminology so there's no concern", "Marisol is not a trained medical interpreter and is also managing her own anxiety about her mother's health", "Marisol should be charged for her time", "There is no concern as long as Marisol is over 18"],
+    correct: 1,
+    explain: "The lecture notes Marisol is 24, works full time, and is doing her best — but she is not a medical interpreter, and is also managing her own anxiety about her mother's health, which can affect the accuracy and completeness of communication."
+  },
+  {
+    cat: "8. Medical Interpreters vs. Family Members",
+    q: "According to the guidelines for nursing care in the reading, what should a nurse do regarding language before proceeding with interview questions?",
+    choices: ["Assume English proficiency unless told otherwise", "Note the patient's preferred language in the chart and determine if a medical interpreter is required", "Use a translation app if the family isn't available", "Skip questions the patient may not understand"],
+    correct: 1,
+    explain: "The reading's guidelines for nursing care specify: note the language the patient prefers, and if English is not their primary language, determine if a medical interpreter is required before proceeding."
+  },
+  {
+    cat: "8. Medical Interpreters vs. Family Members",
+    q: "Which of these does the lecture explicitly say should NEVER be used in place of a qualified medical interpreter?",
+    choices: ["A hospital-employed bilingual staff member trained as an interpreter", "Family, Google Translate, or gesturing", "A phone interpreter service", "A video remote interpreter"],
+    correct: 1,
+    explain: "The lecture states: always use a qualified medical interpreter — not family, not Google Translate, not gesturing — while still asking the patient what they prefer."
+  },
+
+  // ===================== CROSS-CUTTING: ELENA CASE APPLICATION =====================
+  {
+    cat: "Cross-Cutting: Elena Case Application",
+    q: "Elena's chart from nine years ago reads 'Patient non-compliant. Did not return for follow-up.' What does the lecture say this label actually reflects?",
+    choices: ["An accurate clinical description", "A rational, protective response to a system that failed her — not irrationality", "Evidence she distrusts modern medicine entirely", "A documentation or billing error"],
+    correct: 1,
+    explain: "The lecture reframes this: Elena is not noncompliant, she is rational — the system failed her and she protected herself, which is a predictable response to institutional trauma."
+  },
+  {
+    cat: "Cross-Cutting: Elena Case Application",
+    q: "Given Elena's story — no interpreter offered, chart labeling her 'noncompliant,' and her hesitance to bring up her herbal tea — which professional nursing role is most urgently needed in her care right now?",
+    choices: ["Educator", "Advocate", "Manager of care", "Leader"],
+    correct: 1,
+    explain: "The lecture's discussion prompt asks exactly this: advocacy — protecting patient rights, ensuring informed consent, and amplifying the patient's voice — is most needed given how the system has already failed Elena."
+  },
+  {
+    cat: "Cross-Cutting: Elena Case Application",
+    q: "'Boyle Heights has historically high levels of industrial air pollution and limited fresh food access' relates to which SDOH category?",
+    choices: ["Economic Stability", "Education & Health Literacy", "Neighborhood & Environment", "Health Care Access & Quality"],
+    correct: 2,
+    explain: "Neighborhood & Environment covers housing quality, food access, air quality, transportation, and safety — the category tied to Boyle Heights' pollution and limited fresh food access."
+  },
+  {
+    cat: "Cross-Cutting: Elena Case Application",
+    q: "Elena's blood pressure today is 168/104 mmHg, with no prior diagnosis of hypertension because she hasn't been assessed in nine years. This scenario is used in the lecture to illustrate the application of:",
+    choices: ["Trauma-informed care only", "Evidence-based practice — applying population-level data on Latina hypertension outcomes to this specific encounter", "The nursing code of ethics", "The Six Cultural Phenomena model"],
+    correct: 1,
+    explain: "This scenario is presented under the EBP section — showing how population-level evidence about hypertension disparities in Latina women should inform this specific clinical encounter with Elena."
+  },
+  {
+    cat: "Cross-Cutting: Elena Case Application",
+    q: "Which combination of factors from Elena's case best illustrates the overlap between structural barriers and trauma-informed care?",
+    choices: ["Her insurance status alone", "Her six-day work week (structural) combined with her flinching and symptom minimization from past dismissal (trauma-informed)", "Her preference for herbal tea", "Her daughter's age"],
+    correct: 1,
+    explain: "Elena's case is designed to show how structural barriers (inflexible work schedule, clinic hours) and the effects of institutional trauma (flinching, minimizing symptoms) compound each other — both must be addressed for her care to actually work."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const missed = [];
+const catStats = {};
+
+const card = document.getElementById("quizCard");
+const progressText = document.getElementById("progressText");
+const traceFill = document.getElementById("traceFill");
+const catBar = document.getElementById("catBar");
+
+document.getElementById("progressText").innerHTML = "<strong>1</strong> / " + QUESTIONS.length;
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  progressText.innerHTML = "<strong>" + (current + 1) + "</strong> / " + QUESTIONS.length;
+  catBar.textContent = item.cat;
+  traceFill.style.setProperty("--reveal", (100 - ((current) / QUESTIONS.length) * 100) + "%");
+
+  card.innerHTML = "";
+
+  const qnum = document.createElement("div");
+  qnum.className = "qnum";
+  qnum.textContent = "Question " + (current + 1) + " of " + QUESTIONS.length;
+  card.appendChild(qnum);
+
+  const qtext = document.createElement("p");
+  qtext.className = "qtext";
+  qtext.textContent = item.q;
+  card.appendChild(qtext);
+
+  const choicesWrap = document.createElement("div");
+  choicesWrap.className = "choices";
+
+  item.choices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choiceText;
+    btn.addEventListener("click", () => handleAnswer(idx, btn, choicesWrap, item));
+    choicesWrap.appendChild(btn);
+  });
+
+  card.appendChild(choicesWrap);
+
+  const explain = document.createElement("div");
+  explain.className = "explain";
+  explain.id = "explainBox";
+  explain.innerHTML = "<b>Why:</b> " + item.explain;
+  card.appendChild(explain);
+
+  const footerRow = document.createElement("div");
+  footerRow.className = "footer-row";
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "next-btn";
+  nextBtn.id = "nextBtn";
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? "See results" : "Next question";
+  nextBtn.addEventListener("click", goNext);
+  footerRow.appendChild(nextBtn);
+  card.appendChild(footerRow);
+}
+
+function handleAnswer(idx, btn, choicesWrap, item) {
+  if (answered) return;
+  answered = true;
+
+  if (!catStats[item.cat]) catStats[item.cat] = { correct: 0, total: 0 };
+  catStats[item.cat].total++;
+
+  const buttons = choicesWrap.querySelectorAll(".choice");
+  buttons.forEach((b) => (b.disabled = true));
+
+  if (idx === item.correct) {
+    btn.classList.add("correct");
+    score++;
+    catStats[item.cat].correct++;
+  } else {
+    btn.classList.add("incorrect");
+    buttons[item.correct].classList.add("reveal-correct");
+    missed.push({ q: item.q, explain: item.explain, cat: item.cat });
+  }
+
+  document.getElementById("explainBox").classList.add("show");
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function goNext() {
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    renderResults();
+  }
+}
+
+function renderResults() {
+  traceFill.style.setProperty("--reveal", "0%");
+  progressText.innerHTML = "<strong>Done</strong>";
+  catBar.textContent = "";
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let verdict;
+  if (pct >= 90) verdict = "Excellent command of Week 1 across every study guide bullet — you're in strong shape for the midterm on this material.";
+  else if (pct >= 75) verdict = "Solid overall grasp. Check the category breakdown below and review your weakest section before the exam.";
+  else if (pct >= 50) verdict = "Foundation is there, but several areas need another pass — use the category breakdown to target your remaining study time.";
+  else verdict = "Worth another full pass through the study guide, readings, and lecture — this material is heavily tested on the midterm.";
+
+  card.innerHTML = "";
+  const results = document.createElement("div");
+  results.className = "results";
+
+  results.innerHTML =
+    '<div class="score-big">' + score + " / " + QUESTIONS.length + "</div>" +
+    '<div class="score-label">' + pct + "% correct</div>" +
+    '<div class="verdict">' + verdict + "</div>";
+
+  const catList = document.createElement("ul");
+  catList.className = "cat-breakdown";
+  Object.keys(catStats).forEach((cat) => {
+    const stat = catStats[cat];
+    const li = document.createElement("li");
+    li.innerHTML = "<span>" + cat + "</span><b>" + stat.correct + " / " + stat.total + "</b>";
+    catList.appendChild(li);
+  });
+  results.appendChild(catList);
+
+  if (missed.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "missed-list";
+    missed.forEach((m) => {
+      const li = document.createElement("li");
+      li.innerHTML = "<b>" + m.q + "</b><br>" + m.explain;
+      list.appendChild(li);
+    });
+    results.appendChild(list);
+  }
+
+  const restartBtn = document.createElement("button");
+  restartBtn.className = "restart-btn";
+  restartBtn.textContent = "Retake quiz";
+  restartBtn.addEventListener("click", () => {
+    current = 0;
+    score = 0;
+    missed.length = 0;
+    Object.keys(catStats).forEach((k) => delete catStats[k]);
+    renderQuestion();
+  });
+  results.appendChild(restartBtn);
+
+  card.appendChild(results);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURS 3200 — Week 2 Study Guide Quiz</title>
+<style>
+  :root {
+    --navy: #1E2761;
+    --navy-deep: #141B47;
+    --ice: #CADCFC;
+    --ice-pale: #EEF3FD;
+    --paper: #FAFBFD;
+    --ink: #1B2233;
+    --muted: #5B6478;
+    --good: #1E6E4E;
+    --good-bg: #E3F3EA;
+    --bad: #A3312A;
+    --bad-bg: #FBE9E7;
+    --line: #1E276122;
+    --serif: Cambria, "Times New Roman", Georgia, serif;
+    --sans: Calibri, Arial, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .app { width: 100%; max-width: 700px; }
+
+  .trace-wrap { position: relative; height: 46px; margin-bottom: 6px; overflow: hidden; }
+  .trace-track { position: absolute; inset: 0; }
+  .trace-fill {
+    position: absolute; inset: 0;
+    clip-path: inset(0 var(--reveal, 100%) 0 0);
+    transition: clip-path .5s ease;
+  }
+  .trace-track svg, .trace-fill svg { width: 100%; height: 100%; display: block; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .topbar strong { color: var(--navy); }
+  .catbar {
+    font-size: 11px; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--navy); font-weight: 700; margin: 2px 0 0;
+  }
+
+  h1 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin: 16px 0 2px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 26px; line-height: 1.45; }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 26px 26px 22px; box-shadow: 0 1px 2px rgba(30,39,97,.04);
+  }
+
+  .qnum { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .qtext { font-size: 17px; line-height: 1.45; margin: 0 0 20px; color: var(--navy-deep); font-weight: 600; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    text-align: left; background: var(--ice-pale); border: 1px solid transparent;
+    border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-family: var(--sans);
+    color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+  }
+  .choice:hover:not(:disabled) { background: var(--ice); }
+  .choice:active:not(:disabled) { transform: scale(.997); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); font-weight: 600; }
+  .choice.reveal-correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+
+  .explain {
+    margin-top: 18px; padding: 14px 16px; background: var(--ice-pale);
+    border-left: 3px solid var(--navy); border-radius: 0 8px 8px 0;
+    font-size: 13.5px; line-height: 1.55; color: var(--ink); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+
+  .footer-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .next-btn {
+    background: var(--navy); color: #fff; border: none; border-radius: 7px;
+    padding: 11px 22px; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .15s;
+  }
+  .next-btn.show { opacity: 1; pointer-events: auto; }
+  .next-btn:hover { background: var(--navy-deep); }
+
+  .results { text-align: center; padding: 10px 8px 4px; }
+  .score-big { font-family: var(--serif); font-size: 52px; color: var(--navy); font-weight: 700; margin: 6px 0 0; }
+  .score-label { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  .verdict { font-size: 15px; color: var(--ink); margin-bottom: 22px; line-height: 1.5; }
+
+  .cat-breakdown { text-align: left; margin: 0 0 24px; padding: 0; list-style: none; }
+  .cat-breakdown li {
+    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
+    background: var(--ice-pale); border-radius: 7px; margin-bottom: 6px; font-size: 12.5px;
+  }
+  .cat-breakdown b { color: var(--navy); white-space: nowrap; }
+
+  .missed-list { text-align: left; margin: 0 0 26px; padding: 0; list-style: none; }
+  .missed-list li {
+    padding: 10px 14px; background: var(--ice-pale); border-radius: 7px;
+    margin-bottom: 8px; font-size: 13px; line-height: 1.5;
+  }
+  .missed-list li b { color: var(--navy); }
+
+  .restart-btn {
+    background: transparent; color: var(--navy); border: 1.5px solid var(--navy);
+    border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 600;
+    font-family: var(--sans); cursor: pointer;
+  }
+  .restart-btn:hover { background: var(--ice-pale); }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 18px; }
+    .qtext { font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="trace-wrap" aria-hidden="true">
+    <div class="trace-track">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#CADCFC" stroke-width="3"/></svg>
+    </div>
+    <div class="trace-fill" id="traceFill">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#1E2761" stroke-width="3"/></svg>
+    </div>
+  </div>
+  <div class="topbar">
+    <span>NURS 3200 · Week 2</span>
+    <span id="progressText"><strong>1</strong> / 60</span>
+  </div>
+  <div class="catbar" id="catBar"></div>
+
+  <h1>Week 2 — Study Guide Quiz</h1>
+  <p class="sub">Organized around each bullet of your Week 2 study guide, in order. Draws on the Carmen Okafor case, the OpenStax reading (Ch. 7 Vital Signs; Ch. 16 Legal & Ethical Considerations), and the Week 3 HIPAA content that closed the social media gap.</p>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===================== 1. NURSING PROCESS =====================
+  {
+    cat: "1. Nursing Process (ADPIE)",
+    q: "Put the five steps of the nursing process in the correct order.",
+    choices: ["Diagnosis → Assessment → Planning → Implementation → Evaluation", "Assessment → Diagnosis → Planning → Implementation → Evaluation", "Assessment → Planning → Diagnosis → Implementation → Evaluation", "Planning → Assessment → Diagnosis → Evaluation → Implementation"],
+    correct: 1,
+    explain: "ADPIE: Assessment (collect data) → Diagnosis (formulate NANDA-I label) → Planning (SMART goals, select interventions) → Implementation (carry out care) → Evaluation (compare outcomes to goals)."
+  },
+  {
+    cat: "1. Nursing Process (ADPIE)",
+    q: "A nurse interviews a patient about their pain history and reviews their electronic health record before touching them. This is:",
+    choices: ["Diagnosis", "Assessment", "Planning", "Implementation"],
+    correct: 1,
+    explain: "Assessment is the foundation step — collecting subjective and objective data from the patient, family, records, and physical exam. If assessment is flawed, every later step fails."
+  },
+  {
+    cat: "1. Nursing Process (ADPIE)",
+    q: "A nurse determines that a goal was only partially met and decides to revise the care plan. This is:",
+    choices: ["Planning", "Implementation", "Evaluation", "Diagnosis"],
+    correct: 2,
+    explain: "Evaluation compares outcomes to expected goals (met, partially met, not met) and drives whether the plan is revised, continued, or discontinued — it's ongoing, not just a final step."
+  },
+  {
+    cat: "1. Nursing Process (ADPIE)",
+    q: "Which of these is a documented benefit of using the nursing process, per the reading?",
+    choices: ["Increases documentation time by 50%", "Decreases omissions and duplications, and encourages collaborative management of problems", "Eliminates the need for nursing diagnoses", "Replaces the need for provider orders"],
+    correct: 1,
+    explain: "The reading lists several benefits: decreases omissions/duplications, encourages collaborative management, identifies goals and strategies, improves safety and satisfaction, and increases the likelihood of positive outcomes."
+  },
+  {
+    cat: "1. Nursing Process (ADPIE)",
+    q: "The newer Clinical Judgment Measurement Model (CJMM), which NCLEX now uses to test clinical judgment, replaces ADPIE's five steps with six cognitive skills. Which sequence is correct?",
+    choices: ["Recognize cues → Analyze cues → Prioritize hypotheses → Generate solutions → Take action → Evaluate outcomes", "Analyze cues → Recognize cues → Take action → Generate solutions → Prioritize hypotheses → Evaluate outcomes", "Generate solutions → Recognize cues → Analyze cues → Take action → Prioritize hypotheses → Evaluate outcomes", "Recognize cues → Take action → Analyze cues → Generate solutions → Evaluate outcomes → Prioritize hypotheses"],
+    correct: 0,
+    explain: "CJMM's six cognitive skills: Recognize cues → Analyze cues → Prioritize hypotheses → Generate solutions → Take action → Evaluate outcomes. It's a more granular expansion of the same underlying process as ADPIE."
+  },
+
+  // ===================== 2. PES FORMAT =====================
+  {
+    cat: "2. PES / Nursing Diagnosis",
+    q: "In the NANDA-I three-part nursing diagnosis statement (PES format), what does the 'E' stand for?",
+    choices: ["Evaluation", "Etiology (related to)", "Evidence", "Examination"],
+    correct: 1,
+    explain: "PES = Problem, Etiology (r/t — the contributing cause/risk factor), Signs & Symptoms (AEB). The etiology is what nursing interventions actually target — it should never be the medical diagnosis itself."
+  },
+  {
+    cat: "2. PES / Nursing Diagnosis",
+    q: "Which nursing diagnosis statement has a poorly written etiology?",
+    choices: ["Acute Pain r/t surgical tissue trauma AEB pain rating 7/10, guarding", "Acute Pain r/t cholecystectomy", "Risk for Infection r/t surgical incision", "Impaired Gas Exchange r/t decreased lung expansion AEB SpO2 93%"],
+    correct: 1,
+    explain: "\"Acute Pain r/t cholecystectomy\" uses the medical diagnosis/procedure as the etiology — a nurse can't treat the surgery itself. The etiology should name something nursing interventions can influence, like tissue trauma."
+  },
+  {
+    cat: "2. PES / Nursing Diagnosis",
+    q: "The 'AEB' (as evidenced by) portion of a PES statement is required for which type of diagnosis, but NOT used for the other?",
+    choices: ["Required for Risk diagnoses only", "Required for Actual diagnoses; not used for Risk diagnoses since the problem hasn't happened yet", "Required for both equally", "Never required for any diagnosis type"],
+    correct: 1,
+    explain: "AEB (signs & symptoms) is required for Actual diagnoses because the problem is already present. Risk diagnoses don't get an AEB clause, since by definition the problem hasn't occurred yet."
+  },
+  {
+    cat: "2. PES / Nursing Diagnosis",
+    q: "A NANDA-I diagnosis label can be classified as Actual, Risk For, or:",
+    choices: ["Chronic", "Readiness for Enhanced", "Provisional", "Secondary"],
+    correct: 1,
+    explain: "The three NANDA-I diagnosis categories are Actual, Risk For, and Readiness for Enhanced (e.g., \"Readiness for Enhanced Coping\")."
+  },
+  {
+    cat: "2. PES / Nursing Diagnosis",
+    q: "A patient with a medical diagnosis of heart failure might have which corresponding nursing diagnosis, per the reading's example?",
+    choices: ["Heart Failure", "Decreased Cardiac Output", "Cardiomyopathy", "Myocardial Infarction"],
+    correct: 1,
+    explain: "The reading explicitly distinguishes nursing diagnoses from medical diagnoses using this example: a medical diagnosis of heart failure might correspond to a nursing diagnosis of \"Decreased Cardiac Output\" — something nursing interventions can actually address."
+  },
+
+  // ===================== 3. SMART GOALS =====================
+  {
+    cat: "3. SMART Outcome Statements",
+    q: "Which of these is a properly written SMART goal?",
+    choices: ["Patient will feel better.", "Patient will have improved pain control.", "Patient will report pain ≤3/10 within 2 hours of analgesic administration, as verbalized to the nurse, by end of shift.", "Patient will take pain medication as needed."],
+    correct: 2,
+    explain: "This goal is Specific (states the exact behavior), Measurable (≤3/10 scale), Achievable, Relevant (ties to a pain diagnosis), and Time-bound (within 2 hours, by end of shift) — all five SMART elements."
+  },
+  {
+    cat: "3. SMART Outcome Statements",
+    q: "In SMART goals, 'Achievable' specifically means:",
+    choices: ["The goal is set BY the nurse FOR the patient", "The goal is set WITH the patient, realistic for their condition and timeframe — not too easy or too hard", "The goal always matches the hospital's average length of stay", "The goal never changes once written"],
+    correct: 1,
+    explain: "Achievable means realistic given the patient's condition, resources, and timeframe — and should be set collaboratively WITH the patient, not unilaterally for them. Too easy isn't therapeutic; too hard sets the patient up to fail."
+  },
+  {
+    cat: "3. SMART Outcome Statements",
+    q: "The 'R' in SMART (Relevant) means the goal should be:",
+    choices: ["Related to any convenient measure", "Directly tied to the \"P\" (Problem) in the patient's PES statement", "Reviewed only at discharge", "Written by the physician, not the nurse"],
+    correct: 1,
+    explain: "If the nursing diagnosis is Acute Pain, the goal should address pain specifically — not an unrelated problem. Relevance means the goal and the diagnosis are directly connected."
+  },
+  {
+    cat: "3. SMART Outcome Statements",
+    q: "Which phrase makes a goal NOT measurable?",
+    choices: ["\"Oxygen saturation ≥95%\"", "\"Ambulates 20 feet without assistance\"", "\"Patient will feel better\"", "\"Pain rated ≤3/10\""],
+    correct: 2,
+    explain: "\"Patient will feel better\" uses a vague, unquantifiable term. SMART goals need numbers, scales, or clearly observable behaviors — like oxygen saturation percentages, distances, or pain ratings."
+  },
+  {
+    cat: "3. SMART Outcome Statements",
+    q: "Which element of SMART requires a specific deadline like \"within 2 hours\" or \"by discharge\"?",
+    choices: ["Specific", "Measurable", "Achievable", "Time-bound"],
+    correct: 3,
+    explain: "Time-bound goals have a defined timeframe for evaluation, which drives accountability for both the nurse and the patient."
+  },
+
+  // ===================== 4. INTERVENTION TYPES =====================
+  {
+    cat: "4. Types of Nursing Interventions",
+    q: "A nurse repositions a patient to relieve pressure without needing a provider's order. This is an example of a(n):",
+    choices: ["Dependent intervention", "Collaborative/interdependent intervention", "Independent intervention", "Standing order"],
+    correct: 2,
+    explain: "Independent interventions are actions a nurse can perform without a provider's order, within their own scope of practice — like repositioning, patient teaching, or emotional support."
+  },
+  {
+    cat: "4. Types of Nursing Interventions",
+    q: "Administering a prescribed medication requires which type of nursing action?",
+    choices: ["Independent intervention", "Dependent intervention", "Collaborative/interdependent intervention", "Standing order only"],
+    correct: 1,
+    explain: "Dependent interventions require a provider's order to carry out — such as administering a prescribed medication."
+  },
+  {
+    cat: "4. Types of Nursing Interventions",
+    q: "Referring a patient to physical therapy for mobility support requires coordination with another discipline. This is a(n):",
+    choices: ["Independent intervention", "Dependent intervention", "Collaborative/interdependent intervention", "Emergency intervention"],
+    correct: 2,
+    explain: "Collaborative/interdependent interventions require coordination across disciplines — like a physical therapy referral or a dietitian consult."
+  },
+  {
+    cat: "4. Types of Nursing Interventions",
+    q: "In the newer CJMM framework's \"Generate solutions\" step, planned actions are classified as indicated, nonessential, or:",
+    choices: ["Contraindicated", "Optional", "Delegated", "Routine"],
+    correct: 0,
+    explain: "CJMM classifies planned actions as \"indicated,\" \"contraindicated,\" or \"nonessential\" to help the nurse determine priority — a related but distinct framework from independent/dependent/collaborative terminology."
+  },
+
+  // ===================== 5. SUBJECTIVE VS OBJECTIVE =====================
+  {
+    cat: "5. Subjective vs. Objective Data",
+    q: "Carmen states, \"This pain feels different from my incision pain.\" This is an example of:",
+    choices: ["Objective data", "Subjective data", "A vital sign", "A lab value"],
+    correct: 1,
+    explain: "Subjective data is what the patient reports in their own words — feelings, sensations, and perceptions that can't be directly observed by the nurse."
+  },
+  {
+    cat: "5. Subjective vs. Objective Data",
+    q: "Diminished lung sounds heard on auscultation and a measured SpO2 of 93% are examples of:",
+    choices: ["Subjective data", "Objective data", "Neither subjective nor objective", "Only relevant during Evaluation"],
+    correct: 1,
+    explain: "Objective data is measurable and observable information the nurse collects directly — physical exam findings, vital signs, and lab values all qualify."
+  },
+  {
+    cat: "5. Subjective vs. Objective Data",
+    q: "Both subjective and objective data are primarily gathered during which step of the nursing process?",
+    choices: ["Diagnosis", "Assessment", "Planning", "Evaluation"],
+    correct: 1,
+    explain: "Assessment collects both subjective (patient-reported) and objective (nurse-measured/observed) data — neither should be interpreted in isolation from the other."
+  },
+  {
+    cat: "5. Subjective vs. Objective Data",
+    q: "A patient's pain rating of 7/10 is generally classified as:",
+    choices: ["Purely objective, since it's a number", "Subjective, since it's the patient's own perception even though it's expressed as a number", "Neither — pain ratings are excluded from documentation", "Only valid if confirmed by a family member"],
+    correct: 1,
+    explain: "Even though a pain rating uses a number, it remains subjective data because it reflects the patient's own internal perception and can't be independently measured or observed by the nurse."
+  },
+  {
+    cat: "5. Subjective vs. Objective Data",
+    q: "Which of the following is the BEST example of objective data?",
+    choices: ["\"Something just does not feel right.\"", "Bilateral lower extremity 2+ pitting edema on exam", "\"I know what anxious feels like.\"", "\"This is not anxious.\""],
+    correct: 1,
+    explain: "2+ pitting edema is a direct physical exam finding the nurse observes and measures — objective. The other options are all direct quotes reflecting the patient's own perception — subjective."
+  },
+
+  // ===================== 6. CRITICAL THINKING =====================
+  {
+    cat: "6. Critical Thinking & Conflicting Data",
+    q: "Two nurses charted \"patient anxious, reassured\" despite Carmen repeatedly reporting something was wrong. What does this best illustrate?",
+    choices: ["Carmen was correctly assessed as anxious", "A patient's verbal report being dismissed as an assumption rather than investigated", "The nursing process working as intended", "A properly documented SBAR handoff"], 
+    correct: 1,
+    explain: "This is the central critical-thinking failure in the Carmen case: her repeated report was clinical data, but it was dismissed rather than trended or investigated further."
+  },
+  {
+    cat: "6. Critical Thinking & Conflicting Data",
+    q: "Per Tanner's Clinical Judgment Model, which step involves recognizing a deviation from expected patient status and perceiving salient cues?",
+    choices: ["Interpreting", "Noticing", "Responding", "Reflecting"],
+    correct: 1,
+    explain: "Noticing is the first step — recognizing a deviation from expected status based on background knowledge, before you've even fully assessed the situation."
+  },
+  {
+    cat: "6. Critical Thinking & Conflicting Data",
+    q: "Carmen appears calm, not panicked, yet insists something is wrong. What is the best critical-thinking response to this conflict between affect and verbal report?",
+    choices: ["Trust the calm affect and document \"patient reassured\"", "Investigate further — recheck vitals, look for trends, and treat the discrepancy itself as worth acting on", "Ask a family member to confirm how the patient really feels", "Wait until the next shift to reassess"],
+    correct: 1,
+    explain: "Critical thinking means not resolving a conflict between data points in favor of the most convenient explanation — a calm affect doesn't cancel out a repeated, specific verbal report; both need investigation."
+  },
+  {
+    cat: "6. Critical Thinking & Conflicting Data",
+    q: "Why is it a critical-thinking error to let the word \"anxious\" in a prior nursing note anchor your own assessment?",
+    choices: ["Because \"anxious\" is never a valid clinical description", "Because it can bias you into interpreting new data through an already-decided conclusion rather than assessing objectively", "Because only physicians are allowed to use the term", "Because anxiety is not a real medical condition"],
+    correct: 1,
+    explain: "Tanner's Noticing step warns against anchoring: reading a prior note's conclusion before you've assessed the patient yourself risks confirming an existing bias rather than truly noticing new or contradictory cues."
+  },
+  {
+    cat: "6. Critical Thinking & Conflicting Data",
+    q: "What should a nurse do with a repeated patient report like Carmen's, even without any single alarming vital sign?",
+    choices: ["Disregard it since no single vital sign is abnormal", "Treat it as clinical data warranting a trend review, not a personality trait", "Document it as \"anxiety\" to move on quickly", "Ask the patient to stop repeating themselves"],
+    correct: 1,
+    explain: "A repeated, specific report is clinical data. The correct response is reviewing the trend of vital signs over time rather than dismissing the report because no single value looks catastrophic in isolation."
+  },
+
+  // ===================== 7. BIOETHICAL PRINCIPLES =====================
+  {
+    cat: "7. Bioethical Principles",
+    q: "Which principle means the patient's right to make informed decisions free from coercion?",
+    choices: ["Beneficence", "Autonomy", "Fidelity", "Justice"],
+    correct: 1,
+    explain: "Autonomy is the patient's right to self-determination. Professional autonomy separately allows nurses to act on conscience when orders conflict with their values."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "Which principle means taking positive action to help — acting in the patient's best interest, not simply what's comfortable or routine?",
+    choices: ["Beneficence", "Nonmaleficence", "Veracity", "Fidelity"],
+    correct: 0,
+    explain: "Beneficence is doing good/actively promoting the patient's wellbeing. HESI trap: don't confuse it with autonomy — beneficence is about the patient's wellbeing on THEIR terms, not what the nurse personally thinks is best."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "The principle of truthfulness — being honest with patients and not deceiving them — is:",
+    choices: ["Fidelity", "Veracity", "Justice", "Accountability"],
+    correct: 1,
+    explain: "Veracity is the duty to tell the truth; it's also described as an underlying principle behind integrity."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "Equitable distribution of care regardless of race, gender, insurance status, or social history reflects which principle?",
+    choices: ["Justice", "Fidelity", "Nonmaleficence", "Confidentiality"],
+    correct: 0,
+    explain: "Justice means fairness — treating all people equally and judging them on the same criteria, regardless of background."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "Keeping promises and being faithful to professional commitments — honored through consistent, individualized care — describes:",
+    choices: ["Veracity", "Fidelity", "Autonomy", "Beneficence"],
+    correct: 1,
+    explain: "Fidelity is faithfulness and loyalty to the profession and to patients; it's also an underlying principle in accountability."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "\"Nurses should do no harm either intentionally or unintentionally, and are expected to protect those who cannot protect themselves\" describes:",
+    choices: ["Nonmaleficence", "Beneficence", "Justice", "Accountability"],
+    correct: 0,
+    explain: "Nonmaleficence means, above all, do no harm — including harms of omission, not just of action."
+  },
+  {
+    cat: "7. Bioethical Principles",
+    q: "Beyond the five principles named in lecture, the reading's fuller ethical principles list (Weiss et al., 2019) adds two more. What are they?",
+    choices: ["Confidentiality and Accountability", "Compassion and Empathy", "Efficiency and Timeliness", "Loyalty and Discretion"],
+    correct: 0,
+    explain: "The reading's list runs to eight total: autonomy, justice, confidentiality, accountability, nonmaleficence, fidelity, beneficence, and veracity — adding confidentiality (privacy of health/personal information) and accountability (accepting responsibility for one's own actions)."
+  },
+
+  // ===================== 8. INFORMED CONSENT & ADVOCACY =====================
+  {
+    cat: "8. Informed Consent & Advocacy",
+    q: "What is the nurse's specific role in the informed consent process?",
+    choices: ["Explain all risks, benefits, and alternatives to the patient", "Witness the signature and verify the patient is competent and consenting voluntarily — not disclose risks/benefits themselves", "Obtain consent on behalf of the provider whenever they're unavailable", "Consent is solely a legal department responsibility, not a nursing one"],
+    correct: 1,
+    explain: "The nurse's role is to witness the signature and confirm the patient is of legal age, competent, and voluntarily consenting. Disclosing risks, benefits, and alternatives is the provider's responsibility, not the nurse's."
+  },
+  {
+    cat: "8. Informed Consent & Advocacy",
+    q: "Performing a procedure on a patient without their consent may be legally considered:",
+    choices: ["Negligence only", "Battery, an intentional tort", "A HIPAA violation only", "A billing error"],
+    correct: 1,
+    explain: "Performing a procedure without consent may be considered battery (an intentional tort). Failing to obtain informed consent in the first place is considered negligence (a breach of duty)."
+  },
+  {
+    cat: "8. Informed Consent & Advocacy",
+    q: "A checklist box marked \"education provided, patient verbalized understanding\" was checked, but Carmen said no one actually taught her what to expect post-op. This illustrates:",
+    choices: ["A signed form is the same thing as informed consent", "A signed/checked form is NOT the same as informed consent if the patient didn't actually understand", "Carmen is lying about her care", "This is not a nursing concern"],
+    correct: 1,
+    explain: "A checked box or signed form documents that a process occurred, but true informed consent requires the patient to actually understand — Carmen's case shows the gap between paperwork and real comprehension."
+  },
+  {
+    cat: "8. Informed Consent & Advocacy",
+    q: "Advocacy under the ANA Code means:",
+    choices: ["Always agreeing with the physician's plan of care", "Being the patient's voice for their health, safety, and rights — even when it requires challenging a provider", "Only documenting concerns, never voicing them aloud", "A role reserved for charge nurses only"],
+    correct: 1,
+    explain: "Advocacy means being the patient's voice — as when a nurse escalates a concern up the chain of command after a provider dismisses it, exactly as happened when Carmen's surgeon dismissed the SBAR."
+  },
+  {
+    cat: "8. Informed Consent & Advocacy",
+    q: "Which ANA Code of Ethics provision states the nurse's primary commitment is to the patient — whether an individual, family, group, or population?",
+    choices: ["Provision 1", "Provision 2", "Provision 4", "Provision 7"],
+    correct: 1,
+    explain: "Provision 2: the nurse's primary commitment is to the patient. (Provision 1 covers respecting human dignity; Provision 4 covers authority/accountability/responsibility for decisions.)"
+  },
+
+  // ===================== 9. SOCIAL MEDIA =====================
+  {
+    cat: "9. Social Media & Confidentiality",
+    q: "Posting a photo of a patient's injury on social media WITHOUT including the patient's name is:",
+    choices: ["Always acceptable since no name was used", "Still potentially a HIPAA violation if the context makes the patient identifiable", "Only a concern if the photo is shared publicly, not privately", "Legal as long as the patient can't be contacted to object"],
+    correct: 1,
+    explain: "A real case referenced in the reading: a nurse lost her license and faced criminal charges for posting a patient injury photo with no name attached — it was still ruled a violation because surrounding context made the patient identifiable."
+  },
+  {
+    cat: "9. Social Media & Confidentiality",
+    q: "PHI (Protected Health Information) violations can carry fines in what range per violation?",
+    choices: ["$10 to $500", "$100 to $50,000", "No fines, only license suspension", "A flat $1,000 fee regardless of severity"],
+    correct: 1,
+    explain: "PHI violations carry fines from $100 to $50,000 per violation, with criminal charges possible if the violation was willful."
+  },
+  {
+    cat: "9. Social Media & Confidentiality",
+    q: "What is a reliable rule of thumb for deciding whether to post something related to your clinical work?",
+    choices: ["If it doesn't include a full name, it's fine to post", "If you would not want the patient to see what you posted, do not post it", "If it happened more than a week ago, it's no longer sensitive", "Anonymized posts are always acceptable"],
+    correct: 1,
+    explain: "The lecture's guidance: if you would not want the patient to see what you posted, do not post it — a simple, durable standard that doesn't depend on technicalities like whether a name was used."
+  },
+  {
+    cat: "9. Social Media & Confidentiality",
+    q: "Which of the following is included in the definition of PHI (Protected Health Information)?",
+    choices: ["Only the patient's full legal name", "Name, address, DOB, phone, SSN, MRN, diagnosis, photos, and any combination of data that could identify a patient", "Only information stored on paper charts", "Only diagnoses, not demographic information"],
+    correct: 1,
+    explain: "PHI is broadly defined — it includes any single piece of identifying information OR any combination of data points that together could identify a patient, not just an explicit name."
+  },
+
+  // ===================== 10. NORMAL VITAL SIGN RANGES =====================
+  {
+    cat: "10. Normal Vital Sign Ranges",
+    q: "What is the normal adult respiratory rate range?",
+    choices: ["8–12 breaths/min", "12–20 breaths/min", "20–28 breaths/min", "10–16 breaths/min"],
+    correct: 1,
+    explain: "Normal adult respiratory rate is 12–20 breaths/min. Count for a full 60 seconds and never tell the patient you're counting."
+  },
+  {
+    cat: "10. Normal Vital Sign Ranges",
+    q: "According to the AHA 2017 guidelines, Stage 2 hypertension is defined as:",
+    choices: ["130–139/80–89 mmHg", "≥140/90 mmHg", "<120/80 mmHg", "120–129/<80 mmHg"],
+    correct: 1,
+    explain: "Stage 2 HTN is ≥140/90 mmHg (up to 179/119, above which it becomes a hypertensive crisis at ≥180/120)."
+  },
+  {
+    cat: "10. Normal Vital Sign Ranges",
+    q: "An SpO2 below what percentage is generally considered critical?",
+    choices: ["<95%", "<92%", "<90%", "<88%"],
+    correct: 3,
+    explain: "SpO2 <90% = hypoxemia; <88% = critical. Normal is 95–100% for a healthy individual of any age, though COPD patients often have a lower target of 88–92%."
+  },
+  {
+    cat: "10. Normal Vital Sign Ranges",
+    q: "What is considered tachycardia in an adult?",
+    choices: ["HR >80 bpm", "HR >90 bpm", "HR >100 bpm", "HR >120 bpm"],
+    correct: 2,
+    explain: "Normal adult pulse is 60–100 bpm; tachycardia is >100 bpm and bradycardia is <60 bpm."
+  },
+  {
+    cat: "10. Normal Vital Sign Ranges",
+    q: "Which pulse-force documentation is correct for a full, bounding pulse on the standard 4-point scale?",
+    choices: ["0", "1+", "2+", "3+"],
+    correct: 3,
+    explain: "Pulse force scale: 3+ = full/bounding, 2+ = normal/strong, 1+ = weak/diminished/thready, 0 = absent/nonpalpable."
+  },
+
+  // ===================== 11. ORTHOSTATIC VITAL SIGNS =====================
+  {
+    cat: "11. Orthostatic Vital Signs",
+    q: "Orthostatic vital signs are properly assessed in which three positions?",
+    choices: ["Sitting, standing, walking", "Lying, sitting, standing", "Lying, standing, running in place", "Sitting only, taken three times"],
+    correct: 1,
+    explain: "Orthostatic vital signs are checked lying (supine), sitting, and standing to assess for a drop in blood pressure upon positional change."
+  },
+  {
+    cat: "11. Orthostatic Vital Signs",
+    q: "Orthostatic hypotension is confirmed by a drop of at least how much within three minutes of standing?",
+    choices: ["10 mmHg systolic only", "20 mmHg systolic OR 10 mmHg diastolic", "30 mmHg systolic AND 20 mmHg diastolic", "5 mmHg systolic or diastolic"],
+    correct: 1,
+    explain: "Orthostatic hypotension = a drop of at least 20 mmHg systolic OR at least 10 mmHg diastolic within three minutes of standing. Know both thresholds — a lecture slide only mentioned the systolic number."
+  },
+  {
+    cat: "11. Orthostatic Vital Signs",
+    q: "Why does blood pressure normally drop briefly when a person stands up?",
+    choices: ["The heart temporarily stops beating", "Gravity shifts blood to the lower limbs, and the body needs a moment to compensate", "Standing always causes dehydration", "It's caused exclusively by medication side effects"],
+    correct: 1,
+    explain: "Gravity moves blood toward the lower limbs upon standing, temporarily reducing the blood available for the heart to pump; the body normally compensates quickly to restore BP."
+  },
+  {
+    cat: "11. Orthostatic Vital Signs",
+    q: "What is the primary safety concern for a patient with orthostatic hypotension?",
+    choices: ["Elevated body temperature", "Falls and injury from lightheadedness, dizziness, or fainting", "Excessive weight gain", "Increased risk of hyperthermia"],
+    correct: 1,
+    explain: "When compensation fails, patients may feel lightheaded, dizzy, or faint — a significant fall/injury risk, especially in older adults."
+  },
+
+  // ===================== 12. FACTORS AFFECTING BP READINGS =====================
+  {
+    cat: "12. Factors Affecting BP Readings",
+    q: "A blood pressure cuff that is too SMALL for the patient's arm will cause the reading to be:",
+    choices: ["Falsely elevated", "Falsely low", "Unaffected", "Only affects diastolic pressure"],
+    correct: 0,
+    explain: "A cuff too small for the patient's arm falsely elevates the reading; a cuff too large falsely lowers it. Correct sizing matters as much as technique."
+  },
+  {
+    cat: "12. Factors Affecting BP Readings",
+    q: "For proper blood pressure cuff sizing, the bladder length should cover what percentage of arm circumference?",
+    choices: ["20–40%", "80–100%", "10–20%", "150–200%"],
+    correct: 1,
+    explain: "Cuff width should be about 40% of arm circumference, and the bladder length should cover 80–100% of arm circumference."
+  },
+  {
+    cat: "12. Factors Affecting BP Readings",
+    q: "Before measuring blood pressure, the patient should be seated quietly for at least how long?",
+    choices: ["30 seconds", "1 minute", "5 minutes", "15 minutes"],
+    correct: 2,
+    explain: "The patient should be seated quietly for at least 5 minutes prior to blood pressure measurement, with both feet on the floor and the arm supported at heart level."
+  },
+  {
+    cat: "12. Factors Affecting BP Readings",
+    q: "Which patient history detail should make a nurse avoid using a particular arm for blood pressure measurement?",
+    choices: ["A previous flu vaccine in that arm", "A previous mastectomy or the presence of a dialysis fistula on that side", "The patient is right-handed", "The patient prefers the other arm for comfort only"],
+    correct: 1,
+    explain: "Prior mastectomy/lymph node dissection or a dialysis fistula are contraindications for using that arm for blood pressure measurement — always assess for these restrictions first."
+  },
+  {
+    cat: "12. Factors Affecting BP Readings",
+    q: "Which of these is a physiological/lifestyle factor (not a measurement-technique factor) that can raise blood pressure?",
+    choices: ["An incorrectly sized cuff", "Excess sodium, caffeine, and alcohol consumption", "Arm not supported at heart level", "Patient talking during measurement"],
+    correct: 1,
+    explain: "Social/dietary habits like smoking, excess alcohol, caffeine, and sodium consumption raise BP, along with disease states (obesity, high cholesterol, CAD, diabetes, CKD, lupus) and emotional states — separate from cuff/positioning technique errors."
+  },
+
+  // ===================== 13. RESPIRATORY DISTRESS COMBINATIONS =====================
+  {
+    cat: "13. Respiratory Distress Vital Sign Combinations",
+    q: "Carmen's 1000 vitals were HR 104, BP 108/72, RR 20, SpO2 93% on 2L NC, Temp 38.2°C — a clear change from 0600. What does this trend represent?",
+    choices: ["Normal post-op recovery", "Decompensation — the body's compensatory mechanisms are failing", "Simple anxiety, as the prior notes suggested", "An accurate but clinically insignificant fluctuation"],
+    correct: 1,
+    explain: "Rising HR, falling BP DESPITE the tachycardia, rising RR, and falling SpO2 even on supplemental oxygen together indicate decompensation — the body can no longer compensate for an underlying problem (in Carmen's case, early sepsis)."
+  },
+  {
+    cat: "13. Respiratory Distress Vital Sign Combinations",
+    q: "Meeting 2 or more of which criteria after surgery signals a patient trending toward sepsis?",
+    choices: ["SIRS criteria: Temp >38°C or <36°C, HR >90, RR >20", "Normal vital sign ranges", "A single elevated temperature only", "Only a drop in SpO2"],
+    correct: 0,
+    explain: "SIRS (Systemic Inflammatory Response Syndrome) criteria include Temp >38°C or <36°C, HR >90, and RR >20 — meeting 2 or more post-operatively is a red flag for sepsis, as in Carmen's case."
+  },
+  {
+    cat: "13. Respiratory Distress Vital Sign Combinations",
+    q: "Which breathing pattern is deep, rapid, and unlabored (\"air hunger\"), classically seen in diabetic ketoacidosis?",
+    choices: ["Cheyne-Stokes", "Kussmaul", "Biot's", "Bradypnea"],
+    correct: 1,
+    explain: "Kussmaul respirations are deep, rapid, and unlabored — the body's compensation for metabolic acidosis, classically seen in DKA. This is a high-yield HESI/NCLEX pattern."
+  },
+  {
+    cat: "13. Respiratory Distress Vital Sign Combinations",
+    q: "Crescendo-decrescendo breathing cycles with periods of apnea, seen in heart failure, TBI, or the dying process, describes:",
+    choices: ["Kussmaul respirations", "Cheyne-Stokes respirations", "Tachypnea", "Eupnea"],
+    correct: 1,
+    explain: "Cheyne-Stokes is the crescendo-decrescendo pattern with apnea — another high-yield pattern, distinct from Kussmaul's steady deep/rapid breathing."
+  },
+  {
+    cat: "13. Respiratory Distress Vital Sign Combinations",
+    q: "Why is it important to evaluate vital signs as a CLUSTER rather than any single number in isolation?",
+    choices: ["Because a single vital sign is never clinically meaningful", "Because compensatory mechanisms can keep one value looking normal while others reveal the body is failing to compensate", "Because hospital policy requires at least three abnormal values before acting", "Because clusters are only relevant in the ICU"],
+    correct: 1,
+    explain: "In compensation, the body may maintain a seemingly 'stable' BP through tachycardia and vasoconstriction — looking at any one number alone can miss the bigger picture. Trending the whole cluster over time reveals decompensation before a single catastrophic value appears."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const missed = [];
+const catStats = {};
+
+const card = document.getElementById("quizCard");
+const progressText = document.getElementById("progressText");
+const traceFill = document.getElementById("traceFill");
+const catBar = document.getElementById("catBar");
+
+document.getElementById("progressText").innerHTML = "<strong>1</strong> / " + QUESTIONS.length;
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  progressText.innerHTML = "<strong>" + (current + 1) + "</strong> / " + QUESTIONS.length;
+  catBar.textContent = item.cat;
+  traceFill.style.setProperty("--reveal", (100 - ((current) / QUESTIONS.length) * 100) + "%");
+
+  card.innerHTML = "";
+
+  const qnum = document.createElement("div");
+  qnum.className = "qnum";
+  qnum.textContent = "Question " + (current + 1) + " of " + QUESTIONS.length;
+  card.appendChild(qnum);
+
+  const qtext = document.createElement("p");
+  qtext.className = "qtext";
+  qtext.textContent = item.q;
+  card.appendChild(qtext);
+
+  const choicesWrap = document.createElement("div");
+  choicesWrap.className = "choices";
+
+  item.choices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choiceText;
+    btn.addEventListener("click", () => handleAnswer(idx, btn, choicesWrap, item));
+    choicesWrap.appendChild(btn);
+  });
+
+  card.appendChild(choicesWrap);
+
+  const explain = document.createElement("div");
+  explain.className = "explain";
+  explain.id = "explainBox";
+  explain.innerHTML = "<b>Why:</b> " + item.explain;
+  card.appendChild(explain);
+
+  const footerRow = document.createElement("div");
+  footerRow.className = "footer-row";
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "next-btn";
+  nextBtn.id = "nextBtn";
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? "See results" : "Next question";
+  nextBtn.addEventListener("click", goNext);
+  footerRow.appendChild(nextBtn);
+  card.appendChild(footerRow);
+}
+
+function handleAnswer(idx, btn, choicesWrap, item) {
+  if (answered) return;
+  answered = true;
+
+  if (!catStats[item.cat]) catStats[item.cat] = { correct: 0, total: 0 };
+  catStats[item.cat].total++;
+
+  const buttons = choicesWrap.querySelectorAll(".choice");
+  buttons.forEach((b) => (b.disabled = true));
+
+  if (idx === item.correct) {
+    btn.classList.add("correct");
+    score++;
+    catStats[item.cat].correct++;
+  } else {
+    btn.classList.add("incorrect");
+    buttons[item.correct].classList.add("reveal-correct");
+    missed.push({ q: item.q, explain: item.explain, cat: item.cat });
+  }
+
+  document.getElementById("explainBox").classList.add("show");
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function goNext() {
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    renderResults();
+  }
+}
+
+function renderResults() {
+  traceFill.style.setProperty("--reveal", "0%");
+  progressText.innerHTML = "<strong>Done</strong>";
+  catBar.textContent = "";
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let verdict;
+  if (pct >= 90) verdict = "Excellent command of Week 2 across every study guide bullet — you're in strong shape for the exam on this material.";
+  else if (pct >= 75) verdict = "Solid overall grasp. Check the category breakdown below and review your weakest section.";
+  else if (pct >= 50) verdict = "Foundation is there, but several areas need another pass — use the category breakdown to target your remaining study time.";
+  else verdict = "Worth another full pass through the study guide and lecture — this material is heavily tested.";
+
+  card.innerHTML = "";
+  const results = document.createElement("div");
+  results.className = "results";
+
+  results.innerHTML =
+    '<div class="score-big">' + score + " / " + QUESTIONS.length + "</div>" +
+    '<div class="score-label">' + pct + "% correct</div>" +
+    '<div class="verdict">' + verdict + "</div>";
+
+  const catList = document.createElement("ul");
+  catList.className = "cat-breakdown";
+  Object.keys(catStats).forEach((cat) => {
+    const stat = catStats[cat];
+    const li = document.createElement("li");
+    li.innerHTML = "<span>" + cat + "</span><b>" + stat.correct + " / " + stat.total + "</b>";
+    catList.appendChild(li);
+  });
+  results.appendChild(catList);
+
+  if (missed.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "missed-list";
+    missed.forEach((m) => {
+      const li = document.createElement("li");
+      li.innerHTML = "<b>" + m.q + "</b><br>" + m.explain;
+      list.appendChild(li);
+    });
+    results.appendChild(list);
+  }
+
+  const restartBtn = document.createElement("button");
+  restartBtn.className = "restart-btn";
+  restartBtn.textContent = "Retake quiz";
+  restartBtn.addEventListener("click", () => {
+    current = 0;
+    score = 0;
+    missed.length = 0;
+    Object.keys(catStats).forEach((k) => delete catStats[k]);
+    renderQuestion();
+  });
+  results.appendChild(restartBtn);
+
+  card.appendChild(results);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
