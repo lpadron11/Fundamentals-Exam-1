@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURS 3200 — Week 2 Exam Prep Quiz</title>
+<style>
+  :root {
+    --navy: #1E2761;
+    --navy-deep: #141B47;
+    --ice: #CADCFC;
+    --ice-pale: #EEF3FD;
+    --paper: #FAFBFD;
+    --ink: #1B2233;
+    --muted: #5B6478;
+    --good: #1E6E4E;
+    --good-bg: #E3F3EA;
+    --bad: #A3312A;
+    --bad-bg: #FBE9E7;
+    --line: #1E276122;
+    --serif: Cambria, "Times New Roman", Georgia, serif;
+    --sans: Calibri, Arial, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .app { width: 100%; max-width: 700px; }
+
+  .trace-wrap { position: relative; height: 46px; margin-bottom: 6px; overflow: hidden; }
+  .trace-track { position: absolute; inset: 0; }
+  .trace-fill {
+    position: absolute; inset: 0;
+    clip-path: inset(0 var(--reveal, 100%) 0 0);
+    transition: clip-path .5s ease;
+  }
+  .trace-track svg, .trace-fill svg { width: 100%; height: 100%; display: block; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .topbar strong { color: var(--navy); }
+  .catbar {
+    font-size: 11px; letter-spacing: .03em; text-transform: uppercase;
+    color: var(--navy); font-weight: 700; margin: 2px 0 0;
+  }
+
+  h1 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin: 16px 0 2px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; line-height: 1.45; }
+  .note {
+    font-size: 12px; color: var(--muted); background: var(--ice-pale);
+    border-radius: 7px; padding: 9px 12px; margin: 0 0 22px; line-height: 1.5;
+  }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 26px 26px 22px; box-shadow: 0 1px 2px rgba(30,39,97,.04);
+  }
+
+  .qnum { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .qtext { font-size: 17px; line-height: 1.45; margin: 0 0 20px; color: var(--navy-deep); font-weight: 600; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    text-align: left; background: var(--ice-pale); border: 1px solid transparent;
+    border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-family: var(--sans);
+    color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+  }
+  .choice:hover:not(:disabled) { background: var(--ice); }
+  .choice:active:not(:disabled) { transform: scale(.997); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); font-weight: 600; }
+  .choice.reveal-correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+
+  .explain {
+    margin-top: 18px; padding: 14px 16px; background: var(--ice-pale);
+    border-left: 3px solid var(--navy); border-radius: 0 8px 8px 0;
+    font-size: 13.5px; line-height: 1.55; color: var(--ink); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+
+  .footer-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .next-btn {
+    background: var(--navy); color: #fff; border: none; border-radius: 7px;
+    padding: 11px 22px; font-size: 14px; font-weight: 600; font-family: var(--sans);
+    cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .15s;
+  }
+  .next-btn.show { opacity: 1; pointer-events: auto; }
+  .next-btn:hover { background: var(--navy-deep); }
+
+  .results { text-align: center; padding: 10px 8px 4px; }
+  .score-big { font-family: var(--serif); font-size: 52px; color: var(--navy); font-weight: 700; margin: 6px 0 0; }
+  .score-label { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  .verdict { font-size: 15px; color: var(--ink); margin-bottom: 22px; line-height: 1.5; }
+
+  .cat-breakdown { text-align: left; margin: 0 0 24px; padding: 0; list-style: none; }
+  .cat-breakdown li {
+    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
+    background: var(--ice-pale); border-radius: 7px; margin-bottom: 6px; font-size: 12.5px;
+  }
+  .cat-breakdown b { color: var(--navy); white-space: nowrap; }
+
+  .missed-list { text-align: left; margin: 0 0 26px; padding: 0; list-style: none; }
+  .missed-list li {
+    padding: 10px 14px; background: var(--ice-pale); border-radius: 7px;
+    margin-bottom: 8px; font-size: 13px; line-height: 1.5;
+  }
+  .missed-list li b { color: var(--navy); }
+
+  .restart-btn {
+    background: transparent; color: var(--navy); border: 1.5px solid var(--navy);
+    border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 600;
+    font-family: var(--sans); cursor: pointer;
+  }
+  .restart-btn:hover { background: var(--ice-pale); }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 18px; }
+    .qtext { font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="trace-wrap" aria-hidden="true">
+    <div class="trace-track">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#CADCFC" stroke-width="3"/></svg>
+    </div>
+    <div class="trace-fill" id="traceFill">
+      <svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#1E2761" stroke-width="3"/></svg>
+    </div>
+  </div>
+  <div class="topbar">
+    <span>NURS 3200 · Week 2</span>
+    <span id="progressText"><strong>1</strong> / 78</span>
+  </div>
+  <div class="catbar" id="catBar"></div>
+
+  <h1>Week 2 — Exam Prep Quiz</h1>
+  <p class="sub">Built from your Week 2 study guide, the actual in-class quiz, AND the Cross-Cutting Themes section of the full Weeks 1-5 study guide — organized into the exam's six Week 2 categories plus a seventh cross-cutting category tested across every week.</p>
+  <p class="note">Sexuality, Spiritual Health, and Cross-Cutting Themes (prioritization, delegation, patient safety) weren't part of your original Week 2 study guide bullets as you first typed them, but they appear in the actual study guide document and/or the in-class quiz — so they're included here in full depth.</p>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===================== 1. CRITICAL THINKING & CLINICAL JUDGMENT =====================
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "Which action best describes a nurse using critical thinking when making clinical decisions?",
+    choices: ["Makes decisions based on intuition alone", "Accepts one established way to provide care", "Considers what is most important in each patient situation", "Reads and follows the healthcare provider's orders without question"],
+    correct: 2,
+    explain: "Critical thinkers consider what is most important in each clinical situation, explore alternatives, apply ethical principles, and make informed decisions — rather than relying solely on intuition, routine, or blindly following orders."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "A nurse thinks back on an intervention performed earlier in the shift to evaluate whether it was effective. This is an example of which critical thinking skill?",
+    choices: ["Inference", "Reflection", "Explanation", "Self-regulation"],
+    correct: 1,
+    explain: "Reflection involves purposely recalling a situation to discover its meaning and improve future practice — thinking back on the effectiveness of an intervention is a hallmark example."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "According to the nursing process, what is the correct sequence of steps a nurse follows when making clinical decisions?",
+    choices: ["Planning, Assessment, Diagnosis, Implementation, Evaluation", "Assessment, Diagnosis, Planning, Implementation, Evaluation", "Diagnosis, Assessment, Planning, Evaluation, Implementation", "Implementation, Assessment, Planning, Diagnosis, Evaluation"],
+    correct: 1,
+    explain: "ADPIE: Assessment → Diagnosis → Planning → Implementation → Evaluation. This framework guides critical thinking and clinical decision-making throughout the nursing process."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "In the NANDA-I three-part nursing diagnosis (PES) statement, what does the etiology ('related to') portion represent?",
+    choices: ["The medical diagnosis causing the problem", "The contributing cause or risk factor that nursing interventions can actually address", "A list of the patient's medications", "The expected discharge date"],
+    correct: 1,
+    explain: "The etiology should name a nursing-addressable contributing factor — never the medical diagnosis or procedure itself, since a nurse can't directly treat a medical diagnosis."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "Which nursing diagnosis statement below has a POORLY written etiology?",
+    choices: ["Acute Pain r/t surgical tissue trauma AEB pain rating 7/10, guarding", "Acute Pain r/t cholecystectomy", "Risk for Infection r/t surgical incision", "Impaired Gas Exchange r/t decreased lung expansion AEB SpO2 93%"],
+    correct: 1,
+    explain: "\"Acute Pain r/t cholecystectomy\" uses the surgical procedure itself as the etiology — a nurse cannot treat the surgery. The etiology must name something nursing can influence, like tissue trauma."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "Which of these is a properly written SMART, patient-centered outcome statement?",
+    choices: ["Patient will feel better.", "Patient will have improved pain control.", "Patient will report pain ≤3/10 within 2 hours of analgesic administration, as verbalized to the nurse, by end of shift.", "Patient will take pain medication as needed."],
+    correct: 2,
+    explain: "This goal is Specific, Measurable, Achievable, Relevant, and Time-bound — all five SMART elements. Vague terms like 'feel better' or 'improved' fail the Specific/Measurable tests."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "A nurse administers a prescribed medication — this requires a provider's order and is an example of which type of nursing intervention?",
+    choices: ["Independent intervention", "Dependent intervention", "Collaborative/interdependent intervention", "Standing order only"],
+    correct: 1,
+    explain: "Dependent interventions require a provider's order to carry out, such as administering a prescribed medication. Independent interventions (like repositioning or teaching) don't need an order; collaborative interventions require coordination with other disciplines."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "A patient states, 'This pain feels different from my incision pain.' This statement is an example of:",
+    choices: ["Objective data", "Subjective data", "A vital sign", "A lab value"],
+    correct: 1,
+    explain: "Subjective data is what the patient reports in their own words — feelings, sensations, and perceptions that can't be directly observed by the nurse."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "Diminished lung sounds heard on auscultation and a measured SpO2 of 93% are examples of:",
+    choices: ["Subjective data", "Objective data", "Neither subjective nor objective", "Data only relevant during Evaluation"],
+    correct: 1,
+    explain: "Objective data is measurable and observable information the nurse collects directly — physical exam findings, vital signs, and lab values all qualify."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "Two nurses charted 'patient anxious, reassured' despite a patient repeatedly reporting something was wrong. What does this best illustrate?",
+    choices: ["The patient was correctly assessed as anxious", "A patient's verbal report being dismissed as an assumption rather than investigated", "The nursing process working as intended", "A properly documented SBAR handoff"],
+    correct: 1,
+    explain: "A patient's repeated, specific report is clinical data. Dismissing it in favor of a convenient label (like 'anxious') without further investigation is a critical-thinking failure, not sound clinical judgment."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "When a patient's verbal report and their observed nonverbal behavior conflict, what is the best nursing response?",
+    choices: ["Trust whichever data point seems more convenient to document", "Investigate further — recheck trends, and treat the discrepancy itself as worth acting on", "Always default to the verbal report since patients know their own bodies best", "Wait for the next shift to address the discrepancy"],
+    correct: 1,
+    explain: "Critical thinking means not resolving a conflict between data points in favor of the easiest explanation — both pieces of data need investigation, and the mismatch itself is a signal worth pursuing."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "The newer Clinical Judgment Measurement Model (CJMM), which the current NCLEX uses, replaces ADPIE's five steps with six cognitive skills. Which sequence is correct?",
+    choices: ["Recognize cues → Analyze cues → Prioritize hypotheses → Generate solutions → Take action → Evaluate outcomes", "Analyze cues → Recognize cues → Take action → Generate solutions → Prioritize hypotheses → Evaluate outcomes", "Generate solutions → Recognize cues → Analyze cues → Take action → Prioritize hypotheses → Evaluate outcomes", "Recognize cues → Take action → Analyze cues → Generate solutions → Evaluate outcomes → Prioritize hypotheses"],
+    correct: 0,
+    explain: "CJMM's six cognitive skills: Recognize cues → Analyze cues → Prioritize hypotheses → Generate solutions → Take action → Evaluate outcomes — a more granular expansion of the same underlying clinical judgment process as ADPIE."
+  },
+  {
+    cat: "1. Critical Thinking & Clinical Judgment",
+    q: "A nurse determines a patient's SMART goal was only partially met and decides to revise the care plan. Which step of the nursing process is this?",
+    choices: ["Planning", "Implementation", "Evaluation", "Diagnosis"],
+    correct: 2,
+    explain: "Evaluation compares outcomes to expected goals and drives whether the plan is revised, continued, or discontinued — it's an ongoing step, not just a final one."
+  },
+
+  // ===================== 2. ETHICS & VALUES =====================
+  {
+    cat: "2. Ethics & Values",
+    q: "A nurse is caring for a patient who wants to make her own decision about refusing treatment, even though her family disagrees. Which ethical principle is the nurse upholding by supporting the patient's right to decide?",
+    choices: ["Beneficence", "Autonomy", "Fidelity", "Justice"],
+    correct: 1,
+    explain: "Autonomy refers to an individual's freedom to make decisions free of external control. Supporting a patient's right to make her own healthcare decisions — even against family wishes — directly applies this principle."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Four patients on a busy unit all need a scarce resource (e.g., a specialist) at the same time, but only one is available. Which ethical principle is most affected by this resource shortage?",
+    choices: ["Justice", "Fidelity", "Beneficence", "Nonmaleficence"],
+    correct: 0,
+    explain: "Justice concerns fairness and equitable distribution of limited resources — a scenario about who gets access to a scarce resource is fundamentally a justice question."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "What is the PRIMARY cause of most ethical dilemmas encountered by nurses?",
+    choices: ["Unequal power between nurses and physicians", "Poor communication with patients", "The presence of conflicting values", "Lack of hospital policies"],
+    correct: 2,
+    explain: "Ethical dilemmas arise most often from conflicting values — between patient, family, or healthcare team members. Poor communication and power differences may complicate dilemmas, but conflicting values are the primary root cause."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Which ethical principle requires nurses to do good and truly care for patients' physical, social, and emotional needs — going beyond simply providing competent care?",
+    choices: ["Veracity", "Fidelity", "Nonmaleficence", "Beneficence"],
+    correct: 3,
+    explain: "Beneficence means actively promoting the patient's wellbeing — taking positive action to help, not just avoiding harm or performing the minimum competent task."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Which principle means, above all, do no harm — including harms of omission, not just of action?",
+    choices: ["Nonmaleficence", "Beneficence", "Justice", "Accountability"],
+    correct: 0,
+    explain: "Nonmaleficence means the nurse has an obligation to do no harm intentionally, whether through action or through failing to act when action was needed."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Which principle is the duty to tell the truth and not deceive patients?",
+    choices: ["Fidelity", "Veracity", "Justice", "Confidentiality"],
+    correct: 1,
+    explain: "Veracity is the principle of truthfulness — nurses are expected to be honest with patients; it's also considered an underlying principle behind integrity."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Which principle involves keeping promises and being faithful to professional commitments, honored through consistent, individualized care?",
+    choices: ["Fidelity", "Autonomy", "Beneficence", "Justice"],
+    correct: 0,
+    explain: "Fidelity is faithfulness and loyalty to professional commitments — keeping promises to patients and the profession."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Maintaining privacy of a patient's health and personal information is best described by which ethical principle?",
+    choices: ["Confidentiality", "Justice", "Nonmaleficence", "Fidelity"],
+    correct: 0,
+    explain: "Confidentiality is both an ethical principle and a legal issue — respecting and safeguarding patients' personal and health information."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "A nurse accepts responsibility for their own actions, using standards of care and policies as a template for what should have been done. This reflects which principle?",
+    choices: ["Accountability", "Autonomy", "Veracity", "Beneficence"],
+    correct: 0,
+    explain: "Accountability means nurses accept responsibility for their own actions; standards of care, policies, and procedures provide the template for comparing what should have been done against what was actually done."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "A nurse disagrees with a treatment plan and, based on professional conscience, declines to participate while ensuring the patient's care is not abandoned. This reflects which additional dimension of autonomy?",
+    choices: ["Patient autonomy only — this doesn't apply to nurses", "Professional autonomy, which allows nurses to act on conscience when orders conflict with their values", "This is not permitted under any ethical framework", "This only applies to advanced practice nurses"],
+    correct: 1,
+    explain: "Professional autonomy allows nurses to act on conscience when orders conflict with their own values, as long as patient abandonment doesn't occur and appropriate protocols are followed."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Don't confuse beneficence and autonomy — what is the key distinguishing feature?",
+    choices: ["Beneficence is what the nurse personally thinks is best; autonomy is irrelevant to patient wellbeing", "Beneficence advances the patient's wellbeing on THEIR own terms, not what the nurse decides is best", "The two principles are functionally identical", "Autonomy only applies to end-of-life decisions"],
+    correct: 1,
+    explain: "This is a frequently tested trap: beneficence is not about what the nurse thinks is best — it's about advancing the patient's wellbeing according to the patient's own values and goals, which overlaps with respecting autonomy."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "Which of these best reflects the scope of the full ethical principles list covered in this course (beyond the commonly cited five)?",
+    choices: ["Autonomy, beneficence, and nonmaleficence only", "Autonomy, justice, confidentiality, accountability, nonmaleficence, fidelity, beneficence, and veracity", "Only justice and fidelity", "Ethical principles are not formally categorized in nursing"],
+    correct: 1,
+    explain: "The fuller list includes eight principles: autonomy, justice, confidentiality, accountability, nonmaleficence, fidelity, beneficence, and veracity — a scenario question could center on any of them."
+  },
+  {
+    cat: "2. Ethics & Values",
+    q: "A nursing colleague documents a wound as 'present on admission' with no photo and no description, saying 'I just didn't want to get in trouble.' What ethical principle is most directly violated?",
+    choices: ["Veracity — the documentation was not truthful about when the finding actually occurred", "Justice — this has nothing to do with fairness", "Autonomy — this is about the colleague's own decision-making rights", "This does not raise any ethical concern"],
+    correct: 0,
+    explain: "Falsifying the timing of a clinical finding to avoid accountability is a veracity violation — dishonesty in documentation — as well as raising accountability and patient safety concerns."
+  },
+
+  // ===================== 3. LEGAL IMPLICATIONS =====================
+  {
+    cat: "3. Legal Implications",
+    q: "A nurse new to a facility prepares to perform a dressing change they've done before, but not at this hospital. What is the nurse's best initial action?",
+    choices: ["Perform the dressing change using the method learned in nursing school", "Ask the patient how the dressing has been changed most recently", "Check the facility's policy and procedure manual for the correct method", "Ask a more experienced colleague to perform the dressing change instead"],
+    correct: 2,
+    explain: "Accredited hospitals must have written nursing policies and procedures. When unfamiliar with a facility's specific approach, consulting the policy and procedure manual is the appropriate first step."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "A patient asks the nurse about a 'do not resuscitate' (DNR) order. Which statement by the nurse is correct?",
+    choices: ["A DNR order means you will never receive any other treatments", "You will be resuscitated unless a DNR order is documented in your chart", "A DNR order can only be created by your family", "Once signed, a DNR order cannot be changed"],
+    correct: 1,
+    explain: "Healthcare providers perform CPR on appropriate patients unless a DNR order is documented in the chart. DNR orders do not eliminate other treatments, are initiated by the patient (not just family), and can be changed while the patient retains decision-making capacity."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "A patient's adult son asks to view his mother's medical record. What is the nurse's most appropriate response?",
+    choices: ["Provide the record immediately, since family members have full access", "Refuse, since no one except the healthcare provider may ever view records", "Explain that his mother's permission/authorization is needed first, absent a legal proxy", "Ignore the request entirely without any explanation"],
+    correct: 2,
+    explain: "Absent the patient's authorization (or a legal healthcare proxy/power of attorney), family members do not have automatic access to a patient's medical record — this is a core HIPAA/confidentiality principle."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Which set of criteria must be established to prove nursing malpractice?",
+    choices: ["The nurse intended to harm the patient", "The nurse owed a duty of care, breached that duty, and the patient suffered harm as a result of the breach", "The patient was simply dissatisfied with the care provided", "The nurse failed to follow the healthcare provider's orders"],
+    correct: 1,
+    explain: "To prove malpractice: (1) a duty of care was owed, (2) that duty was breached, (3) harm occurred, and (4) the breach caused the harm. Intent to harm is NOT required — malpractice can result from negligence alone."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Performing a procedure on a patient without their consent may be legally considered:",
+    choices: ["Negligence only", "Battery, an intentional tort", "A simple documentation error", "A billing dispute"],
+    correct: 1,
+    explain: "Performing a procedure without consent may be considered battery, an intentional tort. Failing to OBTAIN informed consent in the first place is generally considered negligence (a breach of duty)."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "What is the nurse's specific role in the informed consent process?",
+    choices: ["Explain all risks, benefits, and alternatives to the patient personally", "Witness the signature and verify the patient is competent and consenting voluntarily", "Obtain consent on behalf of the provider whenever they are unavailable", "Consent is solely a legal department responsibility, never a nursing one"],
+    correct: 1,
+    explain: "The nurse's role is to witness the signature and confirm the patient is of legal age, competent, and voluntarily consenting — not to disclose risks/benefits/alternatives, which is the responsibility of the provider performing the procedure."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Advocacy under the ANA Code of Ethics means:",
+    choices: ["Always agreeing with the physician's plan of care without question", "Being the patient's voice for their health, safety, and rights — even when it requires challenging a provider", "Only documenting concerns, never voicing them aloud", "A role reserved exclusively for charge nurses"],
+    correct: 1,
+    explain: "Advocacy means being the patient's voice — escalating a concern up the chain of command when needed, even if that means challenging a provider's initial response."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Posting a photo of a patient's injury on social media WITHOUT including the patient's name is:",
+    choices: ["Always acceptable since no name was used", "Still potentially a HIPAA violation if the surrounding context makes the patient identifiable", "Only a concern if the post is public rather than private", "Legal as long as the post is later deleted"],
+    correct: 1,
+    explain: "A real case referenced in the course: a nurse lost her license and faced criminal charges for exactly this — no name was used, but the context made the patient identifiable, and it was still ruled a violation."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "PHI (Protected Health Information) violations can carry fines in what range per violation?",
+    choices: ["A flat $50 fee, regardless of severity", "$100 to $50,000, with possible criminal charges if willful", "No fines, only a formal warning", "Exactly $1 million minimum per violation"],
+    correct: 1,
+    explain: "PHI violations carry fines from $100 to $50,000 per violation, with criminal charges possible if the violation was willful."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Charting a medication as given BEFORE actually administering it is considered:",
+    choices: ["An acceptable time-saving practice", "Falsification of the medical record", "Required practice at most facilities", "Only a problem if the patient has an adverse reaction"],
+    correct: 1,
+    explain: "Documentation must always occur AFTER administration, never before — pre-charting is considered falsification of the medical record, a serious legal and professional violation."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "If a documentation error is made, what is the correct way to fix it?",
+    choices: ["Use white-out to completely remove the error", "Draw a single line through the error, write 'error,' date, and initial", "Delete the electronic entry entirely and start over with no trace", "Leave it as-is; corrections are not permitted"],
+    correct: 1,
+    explain: "Never erase, white-out, or delete an error. Draw a single line through it, write 'error,' date it, and initial it — preserving the original entry as part of the legal record."
+  },
+  {
+    cat: "3. Legal Implications",
+    q: "Which of these best reflects the nurse's legal obligation when a physician declines to act on an escalated clinical concern?",
+    choices: ["The nurse's obligation ends once the concern has been reported once", "The nurse's obligation to the patient does not end when a provider declines to act — escalation must continue up the chain of command", "Only the charge nurse has any further obligation at that point", "Nurses have no legal standing to escalate beyond the first provider response"],
+    correct: 1,
+    explain: "Per the ANA Code of Ethics (Provision 3), patient safety is not hierarchical — a nurse's obligation to advocate for the patient continues through the full chain of command (charge nurse, nursing supervisor, rapid response team) if the first response is inadequate."
+  },
+
+  // ===================== 4. VITAL SIGNS =====================
+  {
+    cat: "4. Vital Signs",
+    q: "Which of the following represents the normal adult resting heart rate range?",
+    choices: ["40-60 beats per minute", "60-100 beats per minute", "100-120 beats per minute", "80-140 beats per minute"],
+    correct: 1,
+    explain: "Normal adult heart rate is 60-100 beats per minute. Bradycardia is below 60; tachycardia is above 100."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "What is the normal respiratory rate range for a healthy adult?",
+    choices: ["8-12 breaths per minute", "12-20 breaths per minute", "20-30 breaths per minute", "30-40 breaths per minute"],
+    correct: 1,
+    explain: "From adolescence through adulthood, the normal respiratory rate is 12 to 20 breaths per minute. Deviations from this range can signal disease or homeostatic imbalance."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "What is the normal ORAL temperature range for a healthy adult (18-64 years), per the OpenStax vital signs reference table?",
+    choices: ["95.0°F - 97.0°F (35.0°C - 36.1°C)", "97.5°F - 99.5°F (36.4°C - 37.5°C)", "99.6°F - 101.0°F (37.6°C - 38.3°C)", "100.4°F - 102.2°F (38.0°C - 39.0°C)"],
+    correct: 1,
+    explain: "The normal oral temperature for adults aged 18-64 is 97.5°F to 99.5°F (36.4°C to 37.5°C). Values at or above 100.4°F (38°C) are generally considered febrile."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Which five parameters are classified as the standard vital signs?",
+    choices: ["Temperature, pulse, respiratory rate, blood pressure, and pain", "Temperature, pulse, respiratory rate, blood pressure, and oxygen saturation (SpO2)", "Temperature, weight, respiratory rate, blood pressure, and pulse", "Temperature, pulse, pain, blood pressure, and oxygen saturation (SpO2)"],
+    correct: 1,
+    explain: "The five standard vital signs are temperature, pulse (heart rate), respiratory rate, blood pressure, and SpO2. Pain is sometimes called the 'sixth vital sign' but is not one of the traditional five."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "How does the normal oral temperature range change for adults in LATE adulthood (65 years and older), compared to adults 18-64?",
+    choices: ["It is exactly the same range", "It shifts LOWER — 96.4°F to 98.5°F (35.8°C to 36.9°C)", "It shifts higher by 2 full degrees", "Temperature norms don't apply to older adults at all"],
+    correct: 1,
+    explain: "Older adults (65+) have a lower normal oral temperature range — 96.4°F to 98.5°F (35.8°C to 36.9°C) — compared to 97.5-99.5°F for adults 18-64. This matters clinically: a 'normal-looking' temperature in an older adult could actually represent a significant fever for that individual."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Normal adult blood pressure, per the standard reference range, falls within approximately which values?",
+    choices: ["90-120 mmHg systolic, 60-80 mmHg diastolic", "140-160 mmHg systolic, 90-100 mmHg diastolic", "70-90 mmHg systolic, 40-50 mmHg diastolic", "160-180 mmHg systolic, 100-110 mmHg diastolic"],
+    correct: 0,
+    explain: "Normal adult blood pressure falls within approximately 90-120 mmHg systolic and 60-80 mmHg diastolic. Stage 1 hypertension begins at 130-139/80-89; Stage 2 at ≥140/90."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "An SpO2 below what percentage is generally considered critical?",
+    choices: ["Below 95%", "Below 92%", "Below 90%", "Below 88%"],
+    correct: 3,
+    explain: "SpO2 below 90% = hypoxemia; below 88% = critical. Normal is 95-100% for a healthy individual, though COPD patients often have a lower target range of 88-92%."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Orthostatic vital signs are properly assessed in which three positions?",
+    choices: ["Sitting, standing, walking", "Lying, sitting, standing", "Lying, standing, running in place", "Sitting only, taken three separate times"],
+    correct: 1,
+    explain: "Orthostatic vital signs are checked lying (supine), sitting, and standing to assess for a drop in blood pressure upon positional change."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Orthostatic hypotension is confirmed by a drop of at least how much within three minutes of standing?",
+    choices: ["10 mmHg systolic only", "20 mmHg systolic OR 10 mmHg diastolic", "30 mmHg systolic AND 20 mmHg diastolic", "5 mmHg systolic or diastolic"],
+    correct: 1,
+    explain: "Orthostatic hypotension = a drop of at least 20 mmHg systolic OR at least 10 mmHg diastolic within three minutes of standing."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "A blood pressure cuff that is too SMALL for the patient's arm will cause the reading to be:",
+    choices: ["Falsely elevated", "Falsely low", "Unaffected", "Only affects diastolic pressure"],
+    correct: 0,
+    explain: "A cuff too small for the patient's arm falsely elevates the reading; a cuff too large falsely lowers it. Correct sizing matters as much as technique."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "For proper blood pressure measurement, the patient should be seated quietly for at least how long beforehand?",
+    choices: ["30 seconds", "1 minute", "5 minutes", "15 minutes"],
+    correct: 2,
+    explain: "The patient should be seated quietly for at least 5 minutes prior to blood pressure measurement, with both feet on the floor and the arm supported at heart level."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Which combination of vital sign findings would most strongly indicate respiratory distress requiring immediate intervention?",
+    choices: ["A single isolated elevated temperature with all other vitals normal", "Rising heart rate + falling blood pressure despite the tachycardia + rising respiratory rate + falling SpO2 even on supplemental oxygen", "A heart rate of 78 and a respiratory rate of 16", "Blood pressure of 118/76 with no other changes"],
+    correct: 1,
+    explain: "Watch for a CLUSTER, not a single number: rising HR + falling BP despite tachycardia (a sign compensatory mechanisms are failing) + rising RR + falling SpO2 despite oxygen — together these indicate decompensation, not an isolated benign finding."
+  },
+  {
+    cat: "4. Vital Signs",
+    q: "Meeting 2 or more of which criteria after surgery (Temp >38°C or <36°C, HR >90, RR >20) is a red flag for developing sepsis?",
+    choices: ["APGAR criteria", "SIRS (Systemic Inflammatory Response Syndrome) criteria", "Braden Scale criteria", "GCS criteria"],
+    correct: 1,
+    explain: "SIRS criteria include Temp >38°C or <36°C, HR >90, and RR >20 — meeting 2 or more post-operatively is a red flag for a patient trending toward sepsis."
+  },
+
+  // ===================== 5. SEXUALITY =====================
+  {
+    cat: "5. Sexuality",
+    q: "Which term describes a person's internal, deeply held sense of their own gender, which may or may not correspond with the sex assigned at birth?",
+    choices: ["Biological sex", "Gender expression", "Gender identity", "Sexual orientation"],
+    correct: 2,
+    explain: "Gender identity refers to a person's internal, self-identified sense of their own gender. Biological sex refers to chromosomal/anatomical characteristics; gender expression is outward presentation; sexual orientation describes patterns of attraction."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "Which term describes the gender(s) to which a person is attracted — entirely separate from their gender identity?",
+    choices: ["Sexual identity", "Gender expression", "Sexual orientation", "Biological sex"],
+    correct: 2,
+    explain: "Sexual orientation is the gender(s) to which a person is attracted, and it is entirely separate from gender identity — a person's sense of their own gender does not determine who they're attracted to."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "A nurse is caring for a patient who identifies as LGBTQIA+. Which approach best reflects the standard of care?",
+    choices: ["Treat the patient the same as all other patients and avoid asking about sexuality entirely", "Remain open-minded, nonjudgmental, and knowledgeable about gender and sexual identity", "Refer the patient to a specialist with more LGBTQIA+ experience for all related concerns", "Document the patient's sexual orientation prominently in the chart for all team members to see"],
+    correct: 1,
+    explain: "Nurses must be knowledgeable about gender identity, expression, and sexual orientation, and actively remain open-minded and nonjudgmental. Knowledge alone is insufficient — it must translate into inclusive, affirming care from every nurse, not just specialists."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "In the PLISSIT model for sexual health conversations, what does the first 'P' stand for?",
+    choices: ["Privacy", "Permission — giving the patient explicit permission to discuss sexual health concerns", "Prognosis", "Prevention"],
+    correct: 1,
+    explain: "Permission means creating a safe, private, unhurried space and giving the patient explicit permission to bring up sexual health concerns — e.g., 'Many patients have questions about how their health affects their sexual wellbeing — feel free to bring that up anytime.'"
+  },
+  {
+    cat: "5. Sexuality",
+    q: "In the PLISSIT model, what do the 'LI' letters stand for?",
+    choices: ["Legal Information", "Limited Information — providing basic, factual information relevant to the patient's concern", "Lifestyle Impact", "Limited Intervention only"],
+    correct: 1,
+    explain: "Limited Information means providing basic, factual information directly relevant to the patient's concern — for example, explaining that hypertension medications can affect sexual function."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "In the PLISSIT model, what does 'IT' (Intensive Therapy) represent?",
+    choices: ["The nurse personally providing intensive sex therapy", "Recognizing when a concern exceeds nursing scope and referring to a sexual health specialist or therapist", "A type of medication used to treat sexual dysfunction", "An acronym unrelated to referral"],
+    correct: 1,
+    explain: "Intensive Therapy means recognizing when a concern exceeds the nurse's scope of practice and referring to a sexual health specialist or therapist — not attempting to manage complex concerns alone."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "Which practice reflects inclusive sexual health care, per the course's guidance?",
+    choices: ["Only asking about pronouns for patients who appear to be LGBTQ+", "Asking 'What pronouns do you use?' of every patient, not just those assumed to be LGBTQ+", "Avoiding sexual health topics entirely to respect patient privacy", "Using forms and templates that assume binary sex and heterosexual relationships by default"],
+    correct: 1,
+    explain: "Inclusive practice means asking every patient about pronouns — not just those assumed to be LGBTQ+ — and avoiding clinical jargon or forms that assume binary sex or heterosexual relationships."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "Research (Stroumsa et al., 2019) found that patients from sexual minority groups were how much more likely to report providers lacking cultural competence?",
+    choices: ["No more likely at all", "About 2 times more likely", "About 10 times more likely", "About 50% less likely"],
+    correct: 1,
+    explain: "The 2019 study found patients from sexual minority groups were 2× more likely to report providers without cultural competence — underscoring the need for every nurse, not just specialists, to provide informed and affirming care."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "A pre-operative checklist has a checkbox reading 'Sexual function discussed: Yes' that is checked, but the patient says it was never actually discussed. What does this illustrate?",
+    choices: ["A checked box is equivalent to a genuine sexual health assessment", "A checked box does not represent actual informed consent or completed assessment if the conversation never happened", "Sexual health does not require documentation", "This is a normal and acceptable charting practice"],
+    correct: 1,
+    explain: "This mirrors the informed-consent documentation problem seen elsewhere in the course: a checked box or signed form is not the same as the conversation or assessment actually happening — the same principle of genuine, verified completion applies to sexual health assessments."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "Non-disclosure of sexual orientation in a healthcare setting is associated with:",
+    choices: ["Improved preventive care outcomes", "Worse preventive care outcomes", "No measurable difference in outcomes", "Only affects mental health care, not physical health"],
+    correct: 1,
+    explain: "Non-disclosure of sexual orientation is associated with worse preventive care outcomes — patients may avoid disclosing due to fear of judgment or past negative experiences, which can limit the appropriateness and completeness of their care."
+  },
+  {
+    cat: "5. Sexuality",
+    q: "Sexual health as a domain of nursing care should be treated as:",
+    choices: ["A separate specialty area, not part of 'real' holistic nursing care", "A core domain of holistic nursing care, not optional or separate from other nursing responsibilities", "Relevant only for patients in specific age ranges", "A topic that should never be documented for privacy reasons"],
+    correct: 1,
+    explain: "The course is explicit: sexual health is a core domain of holistic nursing care — not optional, not separate from 'real' nursing — and should be documented professionally and included in handoff when relevant."
+  },
+
+  // ===================== 6. SPIRITUAL HEALTH =====================
+  {
+    cat: "6. Spiritual Health",
+    q: "How is spirituality most accurately defined in nursing practice?",
+    choices: ["Membership in and regular attendance at a formal religious organization", "An awareness of one's inner self and a sense of connection to a higher being, nature, or others", "A minor aspect of patient health that rarely affects clinical outcomes", "A practice nurses should avoid addressing to respect patient privacy"],
+    correct: 1,
+    explain: "Spirituality is broadly defined as an awareness of one's inner self and a sense of connection to a higher being, nature, or others. It is distinct from religion and is recognized as significantly influencing health and quality of life."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "A hospitalized patient asks the nurse, 'Why is this happening to me?' and expresses distress about losing faith in core beliefs. This experience is best described as:",
+    choices: ["Religious crisis", "Psychosis", "Spiritual distress", "Existential depression"],
+    correct: 2,
+    explain: "Spiritual distress is a recognized NANDA nursing diagnosis, characterized by questioning the meaning of suffering or illness, hopelessness, anger at a higher power, and inability to engage in previously comforting spiritual practices."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "Which of these is NOT true about spirituality, per the course's definition?",
+    choices: ["It is a universal human dimension not confined to organized religion", "It is synonymous with religion", "It can be shaped by culture, life experience, relationships, and illness", "It often becomes most visible during crisis, such as serious illness or grief"],
+    correct: 1,
+    explain: "Spirituality is explicitly NOT synonymous with religion — many deeply spiritual people do not attend religious services, and vice versa. It's also not the same as mental health, and it isn't the chaplain's job alone."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "In the FICA spiritual assessment framework, what does the 'F' stand for?",
+    choices: ["Family", "Faith — 'Do you consider yourself spiritual or religious? What gives you a sense of meaning?'", "Fear", "Function"],
+    correct: 1,
+    explain: "F = Faith. This question should be asked of every patient, including atheists and agnostics — the course notes that avoiding the assumption that 'no religion' means 'irrelevant' is important, since these patients often have meaningful answers too."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "In the FICA framework, what does the second letter 'I' represent?",
+    choices: ["Isolation", "Importance — how important spirituality/faith is to the patient and whether it influences health decisions", "Intervention", "Information only"],
+    correct: 1,
+    explain: "I = Importance: how important is your spirituality or faith to you in daily life, and does it influence how you make health decisions? Answers here directly affect treatment planning and consent conversations."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "In the FICA framework, what does 'C' (Community) assess, and why does isolation from community matter?",
+    choices: ["Whether the patient has health insurance; isolation affects billing only", "Whether the patient is part of a supportive spiritual or religious community; isolation can be a sign of spiritual distress", "The patient's neighborhood; this has no clinical relevance", "Whether the patient has visitors; this is purely a logistical question"],
+    correct: 1,
+    explain: "Community assesses whether the patient has a spiritual/religious community for support — isolation from that community is a sign of spiritual distress, especially in the face of a new diagnosis."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "In the FICA framework, what does the final 'A' (Address) accomplish?",
+    choices: ["It documents the patient's home address for discharge planning", "It hands agency to the patient by asking how they'd like their spiritual needs addressed in their care", "It refers to addressing the patient's physical symptoms only", "It stands for 'Assessment completion,' unrelated to the patient's input"],
+    correct: 1,
+    explain: "Address asks: 'How would you like me to address your spiritual needs in your care?' This question hands agency to the patient and signals that their whole person — not just their physical condition — matters to the nurse."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "Which of the five overlapping spiritual constructs describes connecting to a force greater than self — which may be God, nature, the universe, or ancestors, uniquely defined by each person?",
+    choices: ["Self-Transcendence", "Transcendence", "Connectedness", "Meaning & Purpose"],
+    correct: 1,
+    explain: "Transcendence is connecting to something greater than oneself, uniquely defined by each individual patient. Self-Transcendence, by contrast, is connecting to one's own inner self and finding personal meaning."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "Which spiritual construct involves interpersonal connection with self, others, and environment — where isolation threatens spiritual health as much as physical health?",
+    choices: ["Faith & Hope", "Connectedness", "Meaning & Purpose", "Transcendence"],
+    correct: 1,
+    explain: "Connectedness is interpersonal connection with self, others, and environment — isolation and estrangement threaten spiritual as much as physical health."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "Which of these is an appropriate nursing intervention for a patient experiencing spiritual distress?",
+    choices: ["Sharing the nurse's own personal religious beliefs to offer comfort", "Active listening with presence, without judgment or an agenda to fix the patient's feelings", "Avoiding the topic entirely to prevent making the patient uncomfortable", "Insisting the patient speak with a chaplain instead of engaging with the nurse directly"],
+    correct: 1,
+    explain: "Active listening — presence without judgment, agenda, or the need to fix — is a core intervention. Facilitating chaplain visits is appropriate, but the nurse should never impose their own beliefs, and spiritual care begins with the nurse, not just a specialist referral."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "According to Jean Watson's quote referenced in the course, what happens to nursing care 'without the spiritual dimension'?",
+    choices: ["Nothing changes — spirituality is unrelated to the quality of nursing care", "Nursing care is incomplete", "Nursing care becomes more efficient", "Spiritual care is entirely the chaplain's responsibility, not the nurse's concern"],
+    correct: 1,
+    explain: "Jean Watson's Theory of Human Caring holds that caring is the moral ideal of nursing, focused on the whole person — mind, body, and spirit. Without the spiritual dimension, nursing care is incomplete."
+  },
+  {
+    cat: "6. Spiritual Health",
+    q: "A patient turns inward, becomes quieter, and less engaged after a difficult diagnosis. Why might this be significant?",
+    choices: ["It always indicates the patient has fully accepted their diagnosis and needs no further support", "It could be mistaken for acceptance but may actually be a sign of spiritual distress", "This behavior has no clinical significance and requires no further assessment", "It only matters if the patient explicitly states they are struggling"],
+    correct: 1,
+    explain: "Turning inward and becoming quieter/less engaged is listed as a possible sign of spiritual distress that is sometimes mistaken for acceptance — this is exactly why proactive spiritual assessment (like FICA) matters rather than waiting for the patient to bring it up."
+  },
+
+  // ===================== 7. CROSS-CUTTING THEMES =====================
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "When prioritizing care among multiple patients or competing needs, what framework should the nurse default to FIRST?",
+    choices: ["Whichever patient's family is most vocal", "The ABCs (Airway, Breathing, Circulation) and Maslow's hierarchy of needs", "Whichever task takes the least time to complete", "Alphabetical order by patient last name"],
+    correct: 1,
+    explain: "The ABCs and Maslow's hierarchy are the default prioritization framework — physiological survival needs (airway, breathing, circulation) come before higher-level needs, and this hierarchy should guide prioritization before any other consideration."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "A nurse must choose between responding to a patient reporting anxiety and a patient with a new onset of labored breathing. Using the ABCs, which patient should be assessed first?",
+    choices: ["The anxious patient, since emotional distress should always come first", "The patient with labored breathing, since airway/breathing takes priority over psychosocial needs", "Whichever patient called first", "Both should be addressed simultaneously by different staff regardless of severity"],
+    correct: 1,
+    explain: "Airway and breathing are physiological survival needs that take priority over psychosocial needs like anxiety, per both the ABCs and Maslow's hierarchy — this doesn't mean the anxious patient's needs don't matter, but the breathing concern is more urgent."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "According to the Five Rights of Delegation, which of these is one of the five rights?",
+    choices: ["Right Diagnosis", "Right Task", "Right Reimbursement", "Right Documentation Format"],
+    correct: 1,
+    explain: "The Five Rights of Delegation are: Right Task, Right Circumstance, Right Person, Right Direction/Communication, and Right Supervision/Evaluation."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "The 'Right Circumstance' component of the Five Rights of Delegation refers to:",
+    choices: ["Whether the task is being delegated on the correct day of the week", "Whether the patient's condition and situation are appropriate/stable enough for the task to be delegated", "Whether the delegate is willing to accept the task", "Whether a physician has approved the delegation"],
+    correct: 1,
+    explain: "Right Circumstance means considering whether the patient's condition and overall situation are stable and appropriate for delegation — an unstable patient may require a task that would otherwise be delegable to instead be performed or closely supervised by the RN."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "The 'Right Person' component of the Five Rights of Delegation means:",
+    choices: ["The task is given to whichever staff member is physically closest", "The task is delegated to someone with the appropriate skills, training, and scope for that specific task", "Any staff member can perform any task as long as they are willing", "Only RNs can ever receive delegated tasks"],
+    correct: 1,
+    explain: "Right Person means matching the task to a delegate who has the appropriate skills, training, and scope of practice for that specific task — not just whoever happens to be available."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "Why does the RN remain accountable for a delegated task even when a NAP or other staff member performs the actual action?",
+    choices: ["The RN is never actually accountable once a task is delegated", "The RN can delegate the task itself, but not the responsibility for clinical judgment, supervision, and outcome", "Accountability transfers entirely to the person performing the task", "Delegation removes all nursing responsibility by design"],
+    correct: 1,
+    explain: "A nurse can delegate the TASK, but never the RESPONSIBILITY — the RN remains accountable for appropriate delegation, supervision, and follow-up regardless of who physically performs the action."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "Which of these reflects the 'Right Direction/Communication' component of the Five Rights of Delegation?",
+    choices: ["Giving vague instructions and trusting the delegate to figure out the details", "Providing clear, specific instructions about what to do, when, and what to report back", "Assuming the delegate already knows what's expected without being told", "Communicating only in writing, never verbally"],
+    correct: 1,
+    explain: "Right Direction/Communication means giving clear, specific instructions — including what to do, expected timeframe, and what findings should be reported back to the RN."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "Which of these is a National Patient Safety Goal (NPSG) category?",
+    choices: ["Patient identification using two unique identifiers", "Maximizing hospital revenue", "Minimizing documentation time", "Reducing the number of nursing staff per shift"],
+    correct: 0,
+    explain: "National Patient Safety Goals include patient identification (using two unique identifiers), improving communication, medication safety, infection prevention, and surgical safety — all aimed at reducing preventable harm."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "Which action aligns with the National Patient Safety Goal for improving communication among caregivers?",
+    choices: ["Using read-back for critical lab values and verbal orders", "Documenting only at the end of the shift to save time", "Avoiding phone calls to providers whenever possible", "Relying solely on informal hallway conversations for handoff"],
+    correct: 0,
+    explain: "Read-back of critical values and verbal/telephone orders is a core communication-focused National Patient Safety Goal — confirming that what was heard matches what was said reduces transcription and interpretation errors."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "Which of these is an example of a medication-safety-focused National Patient Safety Goal in action?",
+    choices: ["Using look-alike/sound-alike drug precautions and reconciling medications at every transition of care", "Allowing verbal orders for high-alert medications with no read-back", "Skipping the Right Patient check for routine medications", "Charting medication administration before actually giving the dose"],
+    correct: 0,
+    explain: "Medication reconciliation at every transition of care, plus precautions around look-alike/sound-alike drugs, directly supports the medication safety National Patient Safety Goal."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "On a Select All That Apply (SATA) question, what is the recommended strategy?",
+    choices: ["Pick exactly two answers regardless of content, since SATA questions always have two correct options", "Evaluate each option independently as true or false, rather than assuming a fixed number of correct answers", "Only select the first and last options listed", "Skip SATA questions since they cannot be reasoned through"],
+    correct: 1,
+    explain: "SATA questions should be approached by evaluating each option independently as true or false — there is no fixed number of correct answers, unlike single-best-answer questions."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "When a test question uses absolute language like 'always,' 'never,' or 'only,' what should the test-taker do?",
+    choices: ["Automatically select that answer, since absolute language sounds authoritative", "Automatically eliminate that answer without further thought", "Be cautious and evaluate whether the underlying concept truly is absolute in all cases", "Absolute language has no bearing on whether an answer is correct or incorrect"],
+    correct: 2,
+    explain: "Absolute language ('always,' 'never,' 'only') should prompt caution — the test-taker should evaluate whether the underlying nursing concept is genuinely true in ALL cases, since most clinical practice involves some nuance or exception."
+  },
+  {
+    cat: "7. Cross-Cutting Themes (Prioritization, Delegation, Safety)",
+    q: "When two answer choices both seem reasonable on an exam question, what strategy helps distinguish the better choice?",
+    choices: ["Always choose the shorter answer", "Ask which option requires nursing assessment or judgment versus which is just a task — judgment-based answers are often the better choice", "Always choose the answer listed first", "Flip a coin, since both are equally valid"],
+    correct: 1,
+    explain: "When two choices seem reasonable, consider which one reflects nursing assessment/clinical judgment versus which is simply a task — the judgment-based option is often the better answer on NCLEX-style questions, since nursing judgment is usually the tested skill."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const missed = [];
+const catStats = {};
+
+const card = document.getElementById("quizCard");
+const progressText = document.getElementById("progressText");
+const traceFill = document.getElementById("traceFill");
+const catBar = document.getElementById("catBar");
+
+document.getElementById("progressText").innerHTML = "<strong>1</strong> / " + QUESTIONS.length;
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  progressText.innerHTML = "<strong>" + (current + 1) + "</strong> / " + QUESTIONS.length;
+  catBar.textContent = item.cat;
+  traceFill.style.setProperty("--reveal", (100 - ((current) / QUESTIONS.length) * 100) + "%");
+
+  card.innerHTML = "";
+
+  const qnum = document.createElement("div");
+  qnum.className = "qnum";
+  qnum.textContent = "Question " + (current + 1) + " of " + QUESTIONS.length;
+  card.appendChild(qnum);
+
+  const qtext = document.createElement("p");
+  qtext.className = "qtext";
+  qtext.textContent = item.q;
+  card.appendChild(qtext);
+
+  const choicesWrap = document.createElement("div");
+  choicesWrap.className = "choices";
+
+  item.choices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choiceText;
+    btn.addEventListener("click", () => handleAnswer(idx, btn, choicesWrap, item));
+    choicesWrap.appendChild(btn);
+  });
+
+  card.appendChild(choicesWrap);
+
+  const explain = document.createElement("div");
+  explain.className = "explain";
+  explain.id = "explainBox";
+  explain.innerHTML = "<b>Why:</b> " + item.explain;
+  card.appendChild(explain);
+
+  const footerRow = document.createElement("div");
+  footerRow.className = "footer-row";
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "next-btn";
+  nextBtn.id = "nextBtn";
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? "See results" : "Next question";
+  nextBtn.addEventListener("click", goNext);
+  footerRow.appendChild(nextBtn);
+  card.appendChild(footerRow);
+}
+
+function handleAnswer(idx, btn, choicesWrap, item) {
+  if (answered) return;
+  answered = true;
+
+  if (!catStats[item.cat]) catStats[item.cat] = { correct: 0, total: 0 };
+  catStats[item.cat].total++;
+
+  const buttons = choicesWrap.querySelectorAll(".choice");
+  buttons.forEach((b) => (b.disabled = true));
+
+  if (idx === item.correct) {
+    btn.classList.add("correct");
+    score++;
+    catStats[item.cat].correct++;
+  } else {
+    btn.classList.add("incorrect");
+    buttons[item.correct].classList.add("reveal-correct");
+    missed.push({ q: item.q, explain: item.explain, cat: item.cat });
+  }
+
+  document.getElementById("explainBox").classList.add("show");
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function goNext() {
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    renderResults();
+  }
+}
+
+function renderResults() {
+  traceFill.style.setProperty("--reveal", "0%");
+  progressText.innerHTML = "<strong>Done</strong>";
+  catBar.textContent = "";
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let verdict;
+  if (pct >= 90) verdict = "Excellent command of Week 2 across every exam category — you're in strong shape for the exam on this material.";
+  else if (pct >= 75) verdict = "Solid overall grasp. Check the category breakdown below and review your weakest section.";
+  else if (pct >= 50) verdict = "Foundation is there, but several areas need another pass — use the category breakdown to target your remaining study time.";
+  else verdict = "Worth another full pass through the study guide, lecture, and in-class quiz — this material is heavily tested.";
+
+  card.innerHTML = "";
+  const results = document.createElement("div");
+  results.className = "results";
+
+  results.innerHTML =
+    '<div class="score-big">' + score + " / " + QUESTIONS.length + "</div>" +
+    '<div class="score-label">' + pct + "% correct</div>" +
+    '<div class="verdict">' + verdict + "</div>";
+
+  const catList = document.createElement("ul");
+  catList.className = "cat-breakdown";
+  Object.keys(catStats).forEach((cat) => {
+    const stat = catStats[cat];
+    const li = document.createElement("li");
+    li.innerHTML = "<span>" + cat + "</span><b>" + stat.correct + " / " + stat.total + "</b>";
+    catList.appendChild(li);
+  });
+  results.appendChild(catList);
+
+  if (missed.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "missed-list";
+    missed.forEach((m) => {
+      const li = document.createElement("li");
+      li.innerHTML = "<b>" + m.q + "</b><br>" + m.explain;
+      list.appendChild(li);
+    });
+    results.appendChild(list);
+  }
+
+  const restartBtn = document.createElement("button");
+  restartBtn.className = "restart-btn";
+  restartBtn.textContent = "Retake quiz";
+  restartBtn.addEventListener("click", () => {
+    current = 0;
+    score = 0;
+    missed.length = 0;
+    Object.keys(catStats).forEach((k) => delete catStats[k]);
+    renderQuestion();
+  });
+  results.appendChild(restartBtn);
+
+  card.appendChild(results);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
