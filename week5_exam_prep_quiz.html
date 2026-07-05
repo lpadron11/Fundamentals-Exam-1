@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURS 3200 — Week 5 Exam Prep Quiz</title>
+<style>
+  :root {
+    --navy: #1E2761; --navy-deep: #141B47; --ice: #CADCFC; --ice-pale: #EEF3FD;
+    --paper: #FAFBFD; --ink: #1B2233; --muted: #5B6478;
+    --good: #1E6E4E; --good-bg: #E3F3EA; --bad: #A3312A; --bad-bg: #FBE9E7;
+    --line: #1E276122; --serif: Cambria, "Times New Roman", Georgia, serif;
+    --sans: Calibri, Arial, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--sans); background: var(--paper); color: var(--ink); display: flex; justify-content: center; padding: 28px 16px 60px; }
+  .app { width: 100%; max-width: 700px; }
+  .trace-wrap { position: relative; height: 46px; margin-bottom: 6px; overflow: hidden; }
+  .trace-track { position: absolute; inset: 0; }
+  .trace-fill { position: absolute; inset: 0; clip-path: inset(0 var(--reveal, 100%) 0 0); transition: clip-path .5s ease; }
+  .trace-track svg, .trace-fill svg { width: 100%; height: 100%; display: block; }
+  .topbar { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .topbar strong { color: var(--navy); }
+  .catbar { font-size: 11px; letter-spacing: .03em; text-transform: uppercase; color: var(--navy); font-weight: 700; margin: 2px 0 0; }
+  h1 { font-family: var(--serif); font-size: 24px; color: var(--navy); margin: 16px 0 2px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; line-height: 1.45; }
+  .note { font-size: 12px; color: var(--muted); background: var(--ice-pale); border-radius: 7px; padding: 9px 12px; margin: 0 0 22px; line-height: 1.5; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 26px 26px 22px; box-shadow: 0 1px 2px rgba(30,39,97,.04); }
+  .qnum { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .qtext { font-size: 17px; line-height: 1.45; margin: 0 0 20px; color: var(--navy-deep); font-weight: 600; }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice { text-align: left; background: var(--ice-pale); border: 1px solid transparent; border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-family: var(--sans); color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, transform .1s; }
+  .choice:hover:not(:disabled) { background: var(--ice); }
+  .choice:active:not(:disabled) { transform: scale(.997); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .choice.incorrect { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); font-weight: 600; }
+  .choice.reveal-correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+  .explain { margin-top: 18px; padding: 14px 16px; background: var(--ice-pale); border-left: 3px solid var(--navy); border-radius: 0 8px 8px 0; font-size: 13.5px; line-height: 1.55; color: var(--ink); display: none; }
+  .explain.show { display: block; }
+  .explain b { color: var(--navy); }
+  .footer-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+  .next-btn { background: var(--navy); color: #fff; border: none; border-radius: 7px; padding: 11px 22px; font-size: 14px; font-weight: 600; font-family: var(--sans); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s, background .15s; }
+  .next-btn.show { opacity: 1; pointer-events: auto; }
+  .next-btn:hover { background: var(--navy-deep); }
+  .results { text-align: center; padding: 10px 8px 4px; }
+  .score-big { font-family: var(--serif); font-size: 52px; color: var(--navy); font-weight: 700; margin: 6px 0 0; }
+  .score-label { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  .verdict { font-size: 15px; color: var(--ink); margin-bottom: 22px; line-height: 1.5; }
+  .cat-breakdown { text-align: left; margin: 0 0 24px; padding: 0; list-style: none; }
+  .cat-breakdown li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px; background: var(--ice-pale); border-radius: 7px; margin-bottom: 6px; font-size: 12.5px; }
+  .cat-breakdown b { color: var(--navy); white-space: nowrap; }
+  .missed-list { text-align: left; margin: 0 0 26px; padding: 0; list-style: none; }
+  .missed-list li { padding: 10px 14px; background: var(--ice-pale); border-radius: 7px; margin-bottom: 8px; font-size: 13px; line-height: 1.5; }
+  .missed-list li b { color: var(--navy); }
+  .restart-btn { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 600; font-family: var(--sans); cursor: pointer; }
+  .restart-btn:hover { background: var(--ice-pale); }
+  @media (max-width: 480px) { .card { padding: 20px 18px; } .qtext { font-size: 15.5px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="trace-wrap" aria-hidden="true">
+    <div class="trace-track"><svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#CADCFC" stroke-width="3"/></svg></div>
+    <div class="trace-fill" id="traceFill"><svg viewBox="0 0 600 46" preserveAspectRatio="none"><path d="M0,23 L60,23 L75,6 L90,40 L105,23 L160,23 L175,10 L190,36 L205,23 L260,23 L275,6 L290,40 L305,23 L360,23 L375,10 L390,36 L405,23 L460,23 L475,6 L490,40 L505,23 L560,23 L575,10 L590,36 L600,23" fill="none" stroke="#1E2761" stroke-width="3"/></svg></div>
+  </div>
+  <div class="topbar"><span>NURS 3200 · Week 5</span><span id="progressText"><strong>1</strong> / 106</span></div>
+  <div class="catbar" id="catBar"></div>
+  <h1>Week 5 — Exam Prep Quiz</h1>
+  <p class="sub">Built from your Week 5 study guide, the full Marcus Webb lecture content, AND the actual in-class quiz — organized into 15 categories spanning Infection Prevention, Immobility &amp; Activity, and Communication.</p>
+  <p class="note">This merges two full passes: precise details revealed by the in-class quiz (empathy examples, infection stage recognition, doffing order, sterile field contamination, renal calculi, calf-circumference DVT screening, trochanter rolls) plus the lecture's deeper content (Chain of Infection, MDROs, Virchow's Triad, health literacy/teach-back, AIDET, and I-PASS handoff).</p>
+  <div class="card" id="quizCard"></div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "Which precaution type requires gloves and a gown, donned before entering the room, with dedicated equipment that stays in the room?",
+    "choices": [
+      "Droplet",
+      "Airborne",
+      "Contact",
+      "Standard only, no additional precautions"
+    ],
+    "correct": 2,
+    "explain": "Contact precautions require gloves + gown before entering the room, with dedicated equipment (stethoscope, BP cuff, thermometer) staying in the room — used for MRSA, VRE, C. diff, scabies, and open draining wounds."
+  },
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "A surgical mask worn within 3 feet of the patient, with the patient also masked during transport, describes which precaution type?",
+    "choices": [
+      "Contact",
+      "Droplet",
+      "Airborne",
+      "Neutropenic"
+    ],
+    "correct": 1,
+    "explain": "Droplet precautions require a surgical mask within 3 feet of the patient — droplets are >5 microns and travel no more than 3 feet before settling. Examples: influenza, RSV (adult), pertussis, mumps, meningococcal disease, COVID-19."
+  },
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "Which precaution requires a fit-tested N95 (or higher) donned BEFORE entering the room, plus a negative-pressure room with the door closed at all times?",
+    "choices": [
+      "Contact",
+      "Droplet",
+      "Airborne",
+      "Standard precautions alone"
+    ],
+    "correct": 2,
+    "explain": "Airborne precautions require an N95 (or higher) donned before entry, plus a negative-pressure (AIIR) room with the door closed. Examples: TB, measles, varicella, disseminated zoster — particles are <5 microns and stay suspended in air."
+  },
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "A patient with confirmed active pulmonary tuberculosis (TB) requires which type of precaution?",
+    "choices": [
+      "Contact",
+      "Droplet",
+      "Airborne",
+      "No special precautions beyond standard"
+    ],
+    "correct": 2,
+    "explain": "TB (Mycobacterium tuberculosis) requires airborne precautions — N95 respirator and a negative-pressure room, since TB particles are small enough to remain suspended in air for extended periods."
+  },
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "Transmission-based precautions (contact, droplet, airborne) should be applied:",
+    "choices": [
+      "Instead of standard precautions",
+      "In addition to standard precautions, never instead of them",
+      "Only for patients in the ICU",
+      "Only when a physician specifically orders them"
+    ],
+    "correct": 1,
+    "explain": "Transmission-based precautions always layer ON TOP of standard precautions — standard precautions apply to every patient regardless of diagnosis, and transmission-based precautions add extra protection for specific known or suspected pathogens."
+  },
+  {
+    "cat": "1. Transmission-Based Precautions",
+    "q": "A patient with active C. diff infection requires which precaution category, along with a specific hand hygiene exception?",
+    "choices": [
+      "Droplet, with alcohol-based hand rub preferred",
+      "Contact, with soap and water required instead of alcohol-based hand rub",
+      "Airborne, with an N95 required",
+      "No precautions needed if the patient is asymptomatic"
+    ],
+    "correct": 1,
+    "explain": "C. diff requires contact precautions PLUS the specific exception that hand hygiene must be soap and water — alcohol-based hand rub does not kill C. diff spores."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "Which organism specifically requires soap and water instead of alcohol-based hand rub, because it forms spores resistant to alcohol?",
+    "choices": [
+      "MRSA",
+      "Influenza",
+      "C. difficile",
+      "VRE"
+    ],
+    "correct": 2,
+    "explain": "C. diff forms spores that resist alcohol — only mechanical removal via soap, water, and friction physically washes the spores away. This is flagged as the single most tested hand hygiene question on HESI."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "What is the minimum time required for alcohol-based hand rub (ABHR), and what is the endpoint?",
+    "choices": [
+      "5 seconds, until hands feel warm",
+      "15 seconds, rubbing until completely dry",
+      "60 seconds, then rinsing with water",
+      "No minimum time is specified"
+    ],
+    "correct": 1,
+    "explain": "ABHR requires a minimum of 15 seconds, rubbing until the hands are completely dry before touching the patient or a surface."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "What is the minimum time required for soap-and-water hand hygiene?",
+    "choices": [
+      "10 seconds",
+      "20 seconds, covering all surfaces including between fingers and nail beds",
+      "45 seconds minimum",
+      "There is no specific minimum time"
+    ],
+    "correct": 1,
+    "explain": "Soap and water requires a minimum of 20 seconds, covering all hand surfaces — between fingers, thumbs, and nail beds."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "Besides C. diff, in which other two situations is soap and water required instead of ABHR?",
+    "choices": [
+      "Before touching any patient, and after every shift",
+      "Visible soiling on the hands, and before eating",
+      "Only when treating pediatric patients",
+      "Only during code blue situations"
+    ],
+    "correct": 1,
+    "explain": "Soap and water is required for C. diff, visible soiling on the hands, and before eating — in all other typical clinical encounters, ABHR is preferred since it's faster, gentler on skin, and effective against most organisms."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "What should be used to disinfect ENVIRONMENTAL SURFACES in a patient's room with active C. diff?",
+    "choices": [
+      "A standard alcohol-based surface wipe",
+      "An EPA-registered sporicidal disinfectant, such as a 10% bleach solution",
+      "Soap and water only, no disinfectant needed",
+      "No special surface cleaning is required for C. diff"
+    ],
+    "correct": 1,
+    "explain": "Just as alcohol-based hand rub doesn't kill C. diff spores on hands, a standard alcohol-based surface wipe won't kill spores on surfaces — an EPA-registered sporicidal disinfectant like 10% bleach is required."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "Which single action is most effective in preventing the spread of infection in any healthcare setting?",
+    "choices": [
+      "Wearing a gown when entering patient rooms",
+      "Performing hand hygiene before and after patient contact",
+      "Placing all patients in private rooms",
+      "Using gloves for all patient interactions"
+    ],
+    "correct": 1,
+    "explain": "Hand hygiene is universally recognized by the CDC and WHO as the single most effective action to prevent the spread of infection."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "A patient is admitted with tuberculosis (TB). Which precaution type and room requirement should the nurse implement?",
+    "choices": [
+      "Contact precautions in any private room",
+      "Droplet precautions with a surgical mask",
+      "Airborne precautions in a negative-pressure room with N95",
+      "Protective environment precautions with positive airflow"
+    ],
+    "correct": 2,
+    "explain": "TB is transmitted via airborne droplet nuclei that remain suspended in air, requiring airborne precautions: a negative-pressure room and N95 respirator for staff."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "When removing PPE after caring for a patient on contact precautions, which item should be removed FIRST?",
+    "choices": [
+      "Mask",
+      "Gown",
+      "Gloves",
+      "Goggles"
+    ],
+    "correct": 2,
+    "explain": "Gloves are the most contaminated item and are removed first. Correct sequence: gloves, goggles/face shield, gown, mask/respirator, then hand hygiene."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "A nurse's hands are visibly soiled with blood after patient care. Which hand hygiene method MUST be used?",
+    "choices": [
+      "Alcohol-based hand sanitizer for at least 20 seconds",
+      "Soap and water — alcohol sanitizer is not effective on visibly soiled hands",
+      "Either method works equally well",
+      "A single alcohol wipe followed by air drying"
+    ],
+    "correct": 1,
+    "explain": "Per CDC guidelines, soap and water must be used when hands are visibly soiled with blood or body fluids — alcohol-based sanitizer cannot remove visible soil."
+  },
+  {
+    "cat": "2. Hand Hygiene: ABHR vs. Soap & Water",
+    "q": "A patient has C. difficile (C. diff). Which infection control measure is most important?",
+    "choices": [
+      "Airborne precautions with an N95 respirator",
+      "Alcohol-based hand sanitizer as the primary hand hygiene method",
+      "Contact precautions with soap and water for hand hygiene",
+      "Droplet precautions with a surgical mask on the patient"
+    ],
+    "correct": 2,
+    "explain": "C. diff is transmitted via spores on surfaces — contact precautions are required, and soap and water (not alcohol) must be used since alcohol does not kill C. diff spores."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "In the correct PPE doffing (removal) sequence, which item should be removed FIRST?",
+    "choices": [
+      "Mask",
+      "Gown",
+      "Gloves — the most contaminated item",
+      "Goggles"
+    ],
+    "correct": 2,
+    "explain": "Doffing order removes the MOST contaminated item first: Gloves → Goggles/face shield → Gown → Mask (removed last, by the straps only)."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "What is the #1 flagged doffing error in the lecture — the most common mistake nurses make when removing PPE?",
+    "choices": [
+      "Removing gloves too slowly",
+      "Removing the mask before the gown",
+      "Not wearing goggles at all",
+      "Washing hands too many times"
+    ],
+    "correct": 1,
+    "explain": "The lecture explicitly flags removing the mask before the gown as the most common doffing mistake and the #1 cause of self-contamination with PPE."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "How should a mask be removed during doffing?",
+    "choices": [
+      "By touching and folding the front panel",
+      "By the straps only, never touching the front",
+      "By pulling it down around the neck for reuse",
+      "By cutting the straps with scissors"
+    ],
+    "correct": 1,
+    "explain": "The mask should be removed by the straps only — the front of the mask is the most contaminated surface and should never be touched."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "For a patient on contact precautions, where should dedicated equipment like a stethoscope and BP cuff be kept?",
+    "choices": [
+      "Returned to a central supply closet after each use",
+      "Kept in the patient's room and not shared with other patients",
+      "Disinfected and used on the very next patient regardless of precaution status",
+      "Sent to central sterile processing after every single use"
+    ],
+    "correct": 1,
+    "explain": "Dedicated equipment for a contact-precautions patient stays in the room and is never shared with other patients — this prevents the equipment itself from becoming a transmission vector."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "Where should PPE for contact precautions be donned, relative to the patient's room?",
+    "choices": [
+      "Anywhere in the hallway before approaching the room",
+      "Before entering the room",
+      "Only after touching the patient",
+      "PPE timing doesn't matter as long as it's worn at some point during the visit"
+    ],
+    "correct": 1,
+    "explain": "Gloves and gown should be donned BEFORE entering the room — not after already touching the door handle or entering with bare hands, which would already risk contaminating the nurse."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "A patient accidentally touches the sterile drape during a procedure setup. What is the correct action?",
+    "choices": [
+      "Continue — the drape was only touched briefly",
+      "Remove only the contaminated portion and continue",
+      "Discard all supplies and prepare a completely new sterile field",
+      "Apply an additional sterile drape over the contaminated area"
+    ],
+    "correct": 2,
+    "explain": "Any item or area of a sterile field touched by a non-sterile object is contaminated. The entire field must be discarded and a new one prepared — there is no partial fix."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "Which zone of the body is considered the sterile zone when wearing a sterile gown?",
+    "choices": [
+      "Below the waist",
+      "Above the shoulders",
+      "Between the waist and shoulders",
+      "The entire body regardless of position"
+    ],
+    "correct": 2,
+    "explain": "The sterile zone is between the waist and shoulders — anything below the waist or above the shoulder level is considered contaminated."
+  },
+  {
+    "cat": "3. Contact Precautions Technique",
+    "q": "What does moisture do to a sterile field?",
+    "choices": [
+      "Nothing — moisture has no effect on sterility",
+      "It contaminates the field, since wet sterile drapes wick bacteria from below",
+      "It enhances sterility by cleaning the surface",
+      "It only matters if the moisture is visibly dirty"
+    ],
+    "correct": 1,
+    "explain": "Wet sterile drapes wick bacteria from underneath — moisture equals contamination, so the field must be kept dry at all times."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "What is the correct sequence for mobilizing a patient after a period of bed rest?",
+    "choices": [
+      "Supine directly to standing, checking vitals only once standing",
+      "Supine → HOB 30° → HOB 45° → HOB 60° → dangle → stand, with a vital sign check at each stage",
+      "Standing first, then sitting, then lying down to reassess",
+      "Any order is acceptable as long as the patient feels ready"
+    ],
+    "correct": 1,
+    "explain": "The correct sequence is gradual and staged, with a vital sign check at each step — never jumping straight from supine to standing, which risks orthostatic hypotension."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "What defines a POSITIVE orthostatic hypotension result?",
+    "choices": [
+      "Any drop in blood pressure at all upon standing",
+      "A systolic BP drop ≥20 mmHg OR a diastolic drop ≥10 mmHg within 3 minutes of standing",
+      "A heart rate increase of more than 5 bpm",
+      "A drop in SpO2 of 2% or more"
+    ],
+    "correct": 1,
+    "explain": "Positive orthostatic hypotension = a systolic BP drop of at least 20 mmHg OR a diastolic drop of at least 10 mmHg within 3 minutes of standing."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Marcus's orthostatic check showed a systolic drop of 32 mmHg and he reported feeling lightheaded when standing. What should the nurse do?",
+    "choices": [
+      "Proceed with ambulation since he can still stand upright",
+      "Hold ambulation, return him to a safe position, and reassess before the next attempt",
+      "Increase his pain medication and try again immediately",
+      "Document the finding but continue as planned since it was a one-time check"
+    ],
+    "correct": 1,
+    "explain": "A positive orthostatic result (32 mmHg systolic drop, well above the 20 mmHg threshold) combined with reported lightheadedness means the nurse should HOLD ambulation, return the patient to a safe position, and plan a later reassessment rather than pushing through."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Why should pain medication be given 30-45 minutes BEFORE attempting a patient's first post-operative ambulation?",
+    "choices": [
+      "To ensure the medication has reached peak effect for better tolerance of movement",
+      "Timing before ambulation has no clinical significance",
+      "To sedate the patient enough that they won't remember the attempt",
+      "Only to satisfy documentation requirements"
+    ],
+    "correct": 0,
+    "explain": "Pre-medicating 30-45 minutes before ambulation allows the medication to reach peak effect, improving the patient's ability to tolerate movement — timed too early or too late, the patient may still be in significant pain or oversedated during the attempt."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Before attempting Marcus's first ambulation, which equipment considerations must be addressed?",
+    "choices": [
+      "None — equipment can be managed as it comes up during the walk",
+      "Portable wound VAC battery life, IV pole management, and Foley bag position held below bladder level",
+      "Only the IV pole needs to be considered",
+      "Equipment concerns are the physical therapist's responsibility only"
+    ],
+    "correct": 1,
+    "explain": "Each piece of equipment (IV pole, portable wound VAC with confirmed battery life, Foley bag held below bladder level) represents a real physical obstacle and fall/safety risk if not organized and addressed before starting ambulation."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "A patient on bed rest for several days is about to ambulate for the first time. What should the nurse do FIRST?",
+    "choices": [
+      "Encourage isometric exercises",
+      "Have the patient dangle at the side of the bed",
+      "Assist the patient directly to standing",
+      "Apply compression stockings before any movement"
+    ],
+    "correct": 1,
+    "explain": "Dangling (sitting at the bedside, legs hanging) comes before standing, allowing the patient to adjust to the position change and helping prevent orthostatic hypotension."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Which complication does passive range-of-motion (PROM) primarily prevent?",
+    "choices": [
+      "Hypostatic pneumonia",
+      "Renal calculi",
+      "Joint contractures",
+      "Orthostatic hypotension"
+    ],
+    "correct": 2,
+    "explain": "PROM moves joints through their full range to maintain flexibility — its primary purpose is preventing joint contractures (permanent shortening of muscles/tendons from lack of movement)."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "A nurse reviews labs for an immobilized patient and finds hypercalcemia. For which complication should the nurse monitor?",
+    "choices": [
+      "Hypostatic pneumonia",
+      "Renal calculi (kidney stones)",
+      "Deep vein thrombosis",
+      "Pressure injury"
+    ],
+    "correct": 1,
+    "explain": "Immobility causes calcium to leach from bones into the bloodstream; excess urinary calcium can precipitate and form renal calculi — a metabolic complication of prolonged immobility."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Which assessment action is most appropriate when screening an immobile patient for DVT?",
+    "choices": [
+      "Vigorously massage the calves to assess for tenderness",
+      "Measure and compare bilateral calf circumferences daily",
+      "Dorsiflex both feet simultaneously and compare pain",
+      "Assess lower extremity pulses only if the patient reports pain"
+    ],
+    "correct": 1,
+    "explain": "Measuring bilateral calf circumferences daily is appropriate DVT screening — a unilateral increase can indicate clot formation. Vigorous massage is contraindicated, as it may dislodge a clot."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Before repositioning an immobile patient up in bed, what is the priority action?",
+    "choices": [
+      "Instruct the patient to push with their feet",
+      "Place a pillow under the head and shoulders",
+      "Assess the patient's weight and determine assistance needed",
+      "Attempt to reposition the patient alone if the bed is flat"
+    ],
+    "correct": 2,
+    "explain": "Before any lifting/repositioning, the nurse must assess the patient's weight to determine how much assistance and equipment will be needed — protecting both patient and nurse from injury."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "A trochanter roll is used in which position, and for what purpose?",
+    "choices": [
+      "Prone position — to prevent dorsiflexion of the feet",
+      "Sitting position — to maintain spinal alignment",
+      "Supine position — to prevent external rotation of the hips",
+      "Side-lying position — to prevent pressure on the greater trochanter"
+    ],
+    "correct": 2,
+    "explain": "A trochanter roll is placed alongside the hip/thigh in the SUPINE position to prevent external rotation of the hip joint, which can lead to contractures over time."
+  },
+  {
+    "cat": "4. Mobilizing After Bed Rest",
+    "q": "Which finding confirms orthostatic hypotension in a patient being assessed before ambulation?",
+    "choices": [
+      "Heart rate increase of 5 bpm when standing",
+      "Blood pressure drop of more than 20 mmHg systolic when moving from lying to standing",
+      "Oxygen saturation decrease of 2% when sitting up",
+      "Temperature elevation of 0.5°F after ambulation"
+    ],
+    "correct": 1,
+    "explain": "Orthostatic hypotension is a systolic BP drop of ≥20 mmHg (or diastolic drop ≥10 mmHg) when moving from lying to sitting/standing — a common complication of prolonged immobility."
+  },
+  {
+    "cat": "5. Passive ROM Technique & Endpoints",
+    "q": "When performing passive range-of-motion (PROM) exercises, where should the nurse stop the movement?",
+    "choices": [
+      "At the point of first resistance or when the patient reports pain — never force past this point",
+      "Only when the joint physically will not move any further at all",
+      "At a fixed angle regardless of patient feedback",
+      "PROM should always be carried through the patient's full anatomical range regardless of resistance"
+    ],
+    "correct": 0,
+    "explain": "PROM should stop at the point of first resistance or when the patient reports pain — forcing a joint past this point risks joint or soft-tissue injury."
+  },
+  {
+    "cat": "5. Passive ROM Technique & Endpoints",
+    "q": "During passive ROM, who provides the muscular effort to move the joint?",
+    "choices": [
+      "The patient moves the joint entirely on their own",
+      "The nurse moves the joint for the patient, who does not use their own muscular effort",
+      "A mechanical device does all the movement without nurse involvement",
+      "PROM requires no movement at all, only positioning"
+    ],
+    "correct": 1,
+    "explain": "Passive ROM means the nurse moves the joint through its range without the patient's own muscular effort — used for patients who cannot move a limb themselves."
+  },
+  {
+    "cat": "5. Passive ROM Technique & Endpoints",
+    "q": "How many repetitions per hour of ankle pumps (alternating dorsiflexion and plantar flexion) does the lecture recommend for an immobile patient?",
+    "choices": [
+      "2 repetitions per hour",
+      "5 repetitions per shift",
+      "10 repetitions per hour",
+      "Once daily is sufficient"
+    ],
+    "correct": 2,
+    "explain": "Ankle pumps should be performed 10 repetitions per hour while the patient is awake — this activates the calf muscle pump mechanism, functioning as the equivalent of walking for venous return."
+  },
+  {
+    "cat": "5. Passive ROM Technique & Endpoints",
+    "q": "How quickly can footdrop develop in a patient without ROM/ankle dorsiflexion maintenance?",
+    "choices": [
+      "Within 3-7 days",
+      "Within several hours",
+      "Only after 3+ months",
+      "Footdrop cannot develop from immobility alone"
+    ],
+    "correct": 0,
+    "explain": "Footdrop (a plantar flexion contracture from prolonged supine positioning) can develop within just 3-7 days without ankle dorsiflexion maintenance — ankle pumps directly help prevent this."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "When are restraints considered appropriate to use?",
+    "choices": [
+      "Whenever a patient is uncooperative with the care plan",
+      "Only as a last resort, when patient safety is at immediate risk and less restrictive alternatives have failed",
+      "As a routine measure for all confused patients",
+      "Whenever staff decide it would be more convenient"
+    ],
+    "correct": 1,
+    "explain": "Restraints are a last resort, used only when patient (or others') safety is at immediate risk — such as pulling at lines/tubes or high fall risk — and only after less restrictive alternatives have failed or been ruled out."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "Which of these should be tried BEFORE considering restraints?",
+    "choices": [
+      "Immediately applying a restraint to prevent any possible risk",
+      "Addressing the underlying cause (pain, hypoxia, delirium, full bladder), reorientation, bed alarms, and involving family/sitter",
+      "Sedating the patient more heavily instead of assessing the cause",
+      "Restraints should always be tried first to establish a safety baseline"
+    ],
+    "correct": 1,
+    "explain": "Alternatives that must be tried first include addressing the underlying cause, reorientation and frequent rounding, bed/chair alarms, relocating closer to the nursing station, involving family or a sitter, and diversional activities."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "What type of order is required to apply a restraint?",
+    "choices": [
+      "A standing order that renews automatically",
+      "A PRN order at the nurse's discretion with no time limit",
+      "A time-limited provider order — never standing or PRN",
+      "No order is required if the nurse deems it necessary"
+    ],
+    "correct": 2,
+    "explain": "Restraints require a time-limited provider order — never a standing or PRN order — along with the least restrictive type and duration necessary."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "How often should a patient in restraints typically be reassessed, per standard nursing practice?",
+    "choices": [
+      "Once every 24 hours",
+      "Every 1-2 hours (per facility policy)",
+      "Only at the start and end of each shift",
+      "Reassessment is not required once restraints are applied"
+    ],
+    "correct": 1,
+    "explain": "Patients in restraints require frequent reassessment per facility policy, commonly every 1-2 hours — restraints should never be used for staff convenience or punishment."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "A NAP reports that a patient's heart rate was 128. What must the nurse do?",
+    "choices": [
+      "Simply document the reported number with no further action",
+      "Personally reassess the patient — responsibility for clinical judgment cannot be delegated",
+      "Ask a different NAP to recheck instead",
+      "Wait until the next scheduled vital sign check"
+    ],
+    "correct": 1,
+    "explain": "The nurse can delegate the TASK of data collection, but never the RESPONSIBILITY for clinical judgment — an abnormal finding requires the nurse to personally reassess."
+  },
+  {
+    "cat": "6. Restraints & Alternatives",
+    "q": "Which of these CAN be delegated to a NAP?",
+    "choices": [
+      "Assessment and interpretation of clinical data",
+      "Vital signs on a stable patient and ADL assistance",
+      "Patient and family education",
+      "Medication administration in most circumstances"
+    ],
+    "correct": 1,
+    "explain": "NAPs can perform vital signs on stable patients, ADL assistance, and I&O measurement — tasks not requiring clinical judgment or interpretation."
+  },
+  {
+    "cat": "7. NAP Delegation",
+    "q": "Which of these tasks CAN be delegated to a nursing assistive personnel (NAP)?",
+    "choices": [
+      "Assessment and interpretation of clinical data",
+      "Vital signs on a stable patient, ADL assistance, and I&O measurement",
+      "Patient and family education",
+      "Administration of medications in most circumstances"
+    ],
+    "correct": 1,
+    "explain": "NAPs can perform vital signs on stable patients, ADL assistance, I&O measurement, positioning/turning, and non-invasive specimen collection — tasks that don't require clinical judgment or interpretation."
+  },
+  {
+    "cat": "7. NAP Delegation",
+    "q": "Which of these tasks CANNOT be delegated to a NAP?",
+    "choices": [
+      "Turning and repositioning a stable patient",
+      "Measuring and recording intake and output",
+      "Assessment, interpretation of clinical data, and patient education",
+      "Passive ROM once the NAP has been taught the technique"
+    ],
+    "correct": 2,
+    "explain": "Assessment, interpretation of clinical data, patient/family education, medication administration, and invasive procedures cannot be delegated to a NAP — these require the nurse's clinical judgment and licensure."
+  },
+  {
+    "cat": "7. NAP Delegation",
+    "q": "A NAP reports that a patient's heart rate was 128 when they took vital signs. What must the nurse do?",
+    "choices": [
+      "Simply document the NAP's reported number with no further action",
+      "Personally reassess the patient — the nurse cannot delegate responsibility for clinical judgment",
+      "Ask a different NAP to recheck the vital sign instead",
+      "Wait until the next scheduled vital sign check to follow up"
+    ],
+    "correct": 1,
+    "explain": "The nurse can delegate the TASK of collecting data, but never the RESPONSIBILITY for clinical judgment and interpretation — an abnormal finding reported by a NAP requires the nurse to personally reassess the patient."
+  },
+  {
+    "cat": "7. NAP Delegation",
+    "q": "What is the key principle underlying delegation to a NAP?",
+    "choices": [
+      "Once delegated, the nurse has no further accountability for the task",
+      "The nurse can delegate the task itself, but never the responsibility/accountability for the outcome",
+      "NAPs should be delegated any task the nurse doesn't want to do",
+      "Delegation removes the need for the nurse to ever reassess the patient"
+    ],
+    "correct": 1,
+    "explain": "You can delegate the task, but not the responsibility — the nurse remains accountable for follow-up assessment, clinical decision-making, and escalation regardless of who collected the raw information."
+  },
+  {
+    "cat": "7. NAP Delegation",
+    "q": "Which of these is an appropriately delegated task for stable, routine care?",
+    "choices": [
+      "Determining whether a wound is showing signs of infection",
+      "Ambulating a stable patient with a gait belt, per the care plan",
+      "Deciding whether to hold a medication based on vital signs",
+      "Explaining a new diagnosis to a patient's family"
+    ],
+    "correct": 1,
+    "explain": "Ambulating a stable patient per an established care plan is an appropriate NAP task. Clinical decision-making — evaluating for infection, deciding to hold medications, or patient/family education — all require the nurse."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "In SBAR, which component includes the patient's name, age, code status, allergies, and the specific reason for this call?",
+    "choices": [
+      "Background",
+      "Situation",
+      "Assessment",
+      "Recommendation"
+    ],
+    "correct": 1,
+    "explain": "Situation includes chief complaint, patient name/age/sex, code status, known allergies, admitting context, and the reason for this specific call."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "Which SBAR component includes surgical/procedure history, relevant PMH, current medications, and recent labs?",
+    "choices": [
+      "Situation",
+      "Background",
+      "Assessment",
+      "Recommendation"
+    ],
+    "correct": 1,
+    "explain": "Background covers surgical/procedure history, relevant PMH, current medications, brief social context (no editorializing), and recent labs."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "The Assessment component of SBAR should include:",
+    "choices": [
+      "Only raw vital sign numbers with no interpretation",
+      "Head-to-toe findings relevant to the call, PLUS the nurse's own clinical interpretation of what's happening",
+      "A list of every medication the patient has ever taken",
+      "Only the recommendation for what to do next"
+    ],
+    "correct": 1,
+    "explain": "Assessment includes head-to-toe findings relevant to this call AND the nurse's clinical interpretation — the lecture is explicit that this should state what the nurse thinks is happening, not just recite data."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "The Recommendation component of SBAR should be formatted as:",
+    "choices": [
+      "A vague general request for the provider to 'take a look when they can'",
+      "A numbered action list: specific request, timeframe, and read-back of orders received",
+      "A summary of the patient's entire hospital stay",
+      "An open-ended question with no specific ask"
+    ],
+    "correct": 1,
+    "explain": "Recommendation is a numbered action list — exactly what is being requested, a timeframe, and a read-back confirmation of any orders received. The lecture states this demonstrates nursing clinical judgment and is not optional."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "In Marcus's 0900 SBAR call, which of these was included in his Situation?",
+    "choices": [
+      "His complete medication administration record from admission",
+      "PCN allergy — anaphylaxis, full code status, and the reason for the call (fever, tachycardia, low SpO2, increased wound VAC output, undertreated pain)",
+      "A detailed description of his home life and occupation",
+      "The complete nursing care plan for his hospital stay"
+    ],
+    "correct": 1,
+    "explain": "Marcus's Situation included his name/age/sex, code status, PCN allergy (anaphylaxis), and the specific reason for the call — his fever, tachycardia, low SpO2, increased wound VAC output, and apparent undertreated pain."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "Per the HESI high-yield points, which SBAR component is most often OMITTED by nurses in practice?",
+    "choices": [
+      "Situation",
+      "Background",
+      "Assessment",
+      "Recommendation"
+    ],
+    "correct": 3,
+    "explain": "The lecture explicitly flags Recommendation as the component most often omitted — nurses may report all the data (situation, background, assessment) but fail to state a specific, numbered request."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "What is the primary purpose of SBAR?",
+    "choices": [
+      "To promote patient autonomy in care decisions",
+      "To standardize communication and reduce misunderstandings among providers",
+      "To document the nurse's assessment in the medical record",
+      "To obtain informed consent before procedures"
+    ],
+    "correct": 1,
+    "explain": "SBAR (Situation, Background, Assessment, Recommendation) is a structured framework designed to standardize handoff and clinical communication, reducing errors from incomplete or ambiguous information."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "A patient with limited English proficiency's adult child offers to translate for discharge teaching. What is the nurse's best action?",
+    "choices": [
+      "Accept the offer — it's faster and more comfortable",
+      "Use simple words and gestures, skipping the interpreter",
+      "Request a professional medical interpreter",
+      "Give written materials in English to review at home"
+    ],
+    "correct": 2,
+    "explain": "A professional medical interpreter ensures accurate translation and protects patient safety/confidentiality. Family members may mistranslate, omit information, or filter content inappropriately."
+  },
+  {
+    "cat": "8. SBAR",
+    "q": "In SBAR, which component includes the nurse's own clinical interpretation, not just a data recitation?",
+    "choices": [
+      "Situation",
+      "Background",
+      "Assessment",
+      "Recommendation"
+    ],
+    "correct": 2,
+    "explain": "Assessment includes relevant findings PLUS the nurse's clinical interpretation — stating what they think is happening, not just reciting numbers."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"Tell me what the pain actually feels like right now\" is an example of which therapeutic technique?",
+    "choices": [
+      "Closed-ended questioning",
+      "Open-ended questioning",
+      "False reassurance",
+      "Premature advice"
+    ],
+    "correct": 1,
+    "explain": "Open-ended questions cannot be answered yes/no and open the door for the patient to share more — this should be used at the start of every assessment."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"Everything is going to be fine — don't worry\" is an example of which non-therapeutic technique, and why is it harmful?",
+    "choices": [
+      "Clarification — it helps reduce patient anxiety appropriately",
+      "False reassurance — when things are NOT fine, trust collapses instantly",
+      "Silence — it gives the patient space to process",
+      "Offering self — it builds a therapeutic relationship"
+    ],
+    "correct": 1,
+    "explain": "False reassurance is dishonest when the clinical picture doesn't support it (as with Marcus's SpO2 94% and WBC 16.8) — when things are later shown to not be fine, patient trust collapses."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"You're not in too much pain, are you?\" is problematic because it is:",
+    "choices": [
+      "An open-ended question that invites honest disclosure",
+      "A closed, leading question that biases the patient toward saying no",
+      "An example of proper clarification technique",
+      "A neutral question with no inherent bias"
+    ],
+    "correct": 1,
+    "explain": "This is a closed pain assessment — a leading question. Patients hear that the nurse expects a 'no' answer, which is especially dangerous with a patient like Marcus who may already be under-reporting pain."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"I want to make sure I understand — when you say 4/10, is that at rest or when you move?\" is an example of:",
+    "choices": [
+      "Minimizing",
+      "Clarification — preventing dangerous assumptions",
+      "Changing the subject",
+      "Premature advice"
+    ],
+    "correct": 1,
+    "explain": "Clarification prevents dangerous assumptions, especially important when a patient's words and body language don't match — exactly Marcus's situation."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"Do you understand everything I told you about your wound?\" is problematic teach-back technique because:",
+    "choices": [
+      "It's too long a question for most patients to process",
+      "The patient will almost always say yes, documenting 'teaching done' without ever confirming real understanding",
+      "It should only be asked by physicians, not nurses",
+      "It's actually a correct and sufficient teach-back method"
+    ],
+    "correct": 1,
+    "explain": "Yes/no teach-back questions get an automatic 'yes' response regardless of actual understanding — real teach-back requires an open-ended demonstration request instead, like asking the patient to explain or show understanding in their own words."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "\"You just need to push through the pain and start walking\" — said before assessing why the patient hasn't ambulated — is an example of:",
+    "choices": [
+      "Silence",
+      "Premature advice, which bypasses assessment",
+      "Summarizing",
+      "Active listening"
+    ],
+    "correct": 1,
+    "explain": "Premature advice bypasses assessment — the patient may have a real clinical reason (pain, orthostatic changes, wound concern) they haven't ambulated, and advice should never substitute for assessing that reason first."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "A nurse speaks one-on-one with a patient at the bedside to obtain a health history. Which level of communication is this?",
+    "choices": [
+      "Intrapersonal",
+      "Interpersonal",
+      "Small group",
+      "Public"
+    ],
+    "correct": 1,
+    "explain": "Interpersonal communication is one-on-one interaction — a nurse gathering health information directly from a patient at the bedside is a classic example."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "A patient responds to a question by pointing to the painful area on their abdomen. Which type of communication is this?",
+    "choices": [
+      "Verbal",
+      "Nonverbal",
+      "Intrapersonal",
+      "Electronic"
+    ],
+    "correct": 1,
+    "explain": "Gesturing — such as pointing — is nonverbal communication, which includes gestures, facial expressions, body language, and touch."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "A patient who just received a cancer diagnosis says nothing and looks at the floor. The nurse sits quietly beside them without speaking. Which technique is this?",
+    "choices": [
+      "Clarifying",
+      "Reflecting",
+      "Therapeutic silence",
+      "Active listening summary"
+    ],
+    "correct": 2,
+    "explain": "Therapeutic silence allows the patient time to process emotions at their own pace — sitting quietly communicates presence and acceptance without pressure to speak."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "A patient says, 'I'm so worried about my surgery tomorrow.' Which response best demonstrates empathy?",
+    "choices": [
+      "'Tomorrow will be better — you'll see.'",
+      "'This must be really difficult to face.'",
+      "'Don't worry. Your surgeon is very experienced.'",
+      "'I can get you something to help you sleep tonight.'"
+    ],
+    "correct": 1,
+    "explain": "Empathy means acknowledging and validating feelings without minimizing or redirecting them. 'This must be really difficult' reflects the patient's emotional experience back nonjudgmentally."
+  },
+  {
+    "cat": "9. Therapeutic vs. Non-Therapeutic Communication",
+    "q": "Communication within yourself — clinical reflection, checking your own biases before entering a room — is called:",
+    "choices": [
+      "Interpersonal communication",
+      "Intrapersonal communication",
+      "Small-group communication",
+      "Public communication"
+    ],
+    "correct": 1,
+    "explain": "Intrapersonal communication is communication within yourself — the starting point where unexamined assumptions can walk into the room with the nurse if not checked first."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "In nursing/clinical terms, 'affect' refers to:",
+    "choices": [
+      "The patient's internally reported, sustained emotional state over time",
+      "The outward, observable expression of emotion — facial expression, tone of voice, body language",
+      "A formal psychiatric diagnosis",
+      "The patient's medication list"
+    ],
+    "correct": 1,
+    "explain": "Affect is the outward, OBSERVABLE expression of emotion, distinct from mood (the patient's internally reported, sustained emotional state). A congruent affect matches the verbal message; an incongruent affect does not."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "Marcus says his pain is '4/10' and that he's 'okay,' but is grimacing, guarding his abdomen, and hasn't moved since 0200. This is an example of:",
+    "choices": [
+      "A congruent affect matching his verbal report",
+      "An incongruent affect — his nonverbal expression does not match his verbal message",
+      "Normal post-operative behavior requiring no further assessment",
+      "Evidence that his pain report should simply be discounted entirely"
+    ],
+    "correct": 1,
+    "explain": "This is a textbook incongruent affect — what Marcus says and what his body shows don't match, and this mismatch is itself clinical data requiring investigation, not dismissal."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "According to Mehrabian's research cited in the lecture, roughly what percentage of total message impact comes from nonverbal communication?",
+    "choices": [
+      "5-10%",
+      "25-30%",
+      "55-93%",
+      "100%, verbal content is irrelevant"
+    ],
+    "correct": 2,
+    "explain": "Nonverbal communication accounts for an estimated 55-93% of total message impact (Mehrabian) — this is why nonverbal cues must be treated as real clinical data, not background noise."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "When a patient's verbal report and nonverbal expression conflict, what is the nurse's correct first response?",
+    "choices": [
+      "Document only the verbal report since it's what the patient explicitly stated",
+      "Investigate the gap — use clarification and reassess rather than taking the verbal report at face value",
+      "Assume the nonverbal cues are unreliable and should be ignored",
+      "Wait for the next shift to address the discrepancy"
+    ],
+    "correct": 1,
+    "explain": "The nurse's job is to close the gap between what the patient says and what they show — using clarification, reassessment, and further investigation rather than simply charting the verbal number and moving on."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "In the lecture's ethics discussion, what was the consequence of the nurse charting '4/10 pain, patient reports comfortable' and moving on, despite Marcus's nonverbal incongruence?",
+    "choices": [
+      "No consequence — the documentation was accurate and appropriate",
+      "Marcus was later found in acute respiratory distress from undertreated pain and severe splinting",
+      "Marcus was discharged early due to his stable presentation",
+      "The documentation prevented any further complications"
+    ],
+    "correct": 1,
+    "explain": "This is the lecture's central ethics/legal case: relying solely on verbal self-report despite documented nonverbal incongruence led to Marcus being found in acute respiratory distress — his documentation became part of a formal patient safety review."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "In clinical terms, 'affect' refers to:",
+    "choices": [
+      "The patient's internally reported, sustained emotional state over time",
+      "The outward, observable expression of emotion — facial expression, tone, body language",
+      "A formal psychiatric diagnosis",
+      "The patient's medication list"
+    ],
+    "correct": 1,
+    "explain": "Affect is the outward, OBSERVABLE expression of emotion, distinct from mood (the patient's internally reported, sustained state). A congruent affect matches the verbal message; incongruent does not."
+  },
+  {
+    "cat": "10. Affect & Verbal/Nonverbal Mismatch",
+    "q": "A patient says their pain is '4/10' and they're 'okay,' but is grimacing, guarding, and hasn't moved in hours. This is an example of:",
+    "choices": [
+      "A congruent affect matching the verbal report",
+      "An incongruent affect — the nonverbal expression doesn't match the verbal message",
+      "Normal post-operative behavior needing no further assessment",
+      "Evidence the pain report should be discounted entirely"
+    ],
+    "correct": 1,
+    "explain": "This is a textbook incongruent affect — what the patient says and what their body shows don't match, and the mismatch itself is clinical data requiring investigation, not dismissal."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Which link in the chain of infection is broken by hand hygiene, standard precautions, and PPE?",
+    "choices": [
+      "Infectious agent",
+      "Mode of transmission",
+      "Susceptible host",
+      "Reservoir"
+    ],
+    "correct": 1,
+    "explain": "Mode of transmission (contact, droplet, airborne, vector) is broken by hand hygiene, standard precautions, and PPE — Marcus's wound exudate is a contact transmission risk to anyone touching it without proper PPE."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Which link represents where a pathogen lives, such as a wound bed, IV tubing, or urinary catheter?",
+    "choices": [
+      "Reservoir",
+      "Portal of exit",
+      "Portal of entry",
+      "Susceptible host"
+    ],
+    "correct": 0,
+    "explain": "The reservoir is where the pathogen lives — for Marcus, his wound bed, peritoneal cavity, skin flora, IV tubing, and urinary catheter are all active reservoirs, broken by wound care, sterile technique, and device removal."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Marcus's T2DM, post-surgical immune suppression, BMI 33, and poorly controlled glucose all compromise which link in the chain of infection?",
+    "choices": [
+      "Infectious agent",
+      "Portal of entry",
+      "Susceptible host",
+      "Mode of transmission"
+    ],
+    "correct": 2,
+    "explain": "The susceptible host link reflects the patient's own defenses — Marcus has multiple simultaneous factors compromising his host defenses, broken by glucose control, nutrition, and early mobility."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "How many links make up the chain of infection?",
+    "choices": [
+      "Three",
+      "Four",
+      "Five",
+      "Six"
+    ],
+    "correct": 3,
+    "explain": "The six links are: Infectious Agent, Reservoir, Portal of Exit, Mode of Transmission, Portal of Entry, and Susceptible Host. Breaking ANY single link stops the spread of infection."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Marcus's own PIV and Foley catheter represent which link in the chain of infection for potentially introducing NEW organisms?",
+    "choices": [
+      "Portal of entry",
+      "Reservoir only",
+      "Infectious agent",
+      "Portal of exit only"
+    ],
+    "correct": 0,
+    "explain": "Portal of entry is how a pathogen gets INTO the next host — Marcus's PIV and Foley catheter are active portals of entry for new organisms, broken by sterile technique, IV site assessment, and catheter care bundles."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "A patient has a cough and mild sore throat since yesterday, no fever yet, no definitive diagnosis. Which stage of infection is this?",
+    "choices": [
+      "Incubation",
+      "Prodromal",
+      "Illness",
+      "Convalescence"
+    ],
+    "correct": 1,
+    "explain": "The prodromal stage features early, vague, nonspecific symptoms (mild fatigue, cough, sore throat) before full illness is apparent. Incubation has no symptoms at all yet."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Which stage of infection is the pathogen replicating with NO symptoms present yet?",
+    "choices": [
+      "Incubation",
+      "Prodromal",
+      "Illness",
+      "Convalescence"
+    ],
+    "correct": 0,
+    "explain": "Incubation is the period where the pathogen enters and replicates with no symptoms yet — duration varies from hours to months depending on the organism."
+  },
+  {
+    "cat": "11. Chain of Infection",
+    "q": "Full symptom expression, with the immune system actively fighting and intervention most critical, describes which stage?",
+    "choices": [
+      "Incubation",
+      "Prodromal",
+      "Illness (Acute)",
+      "Convalescent"
+    ],
+    "correct": 2,
+    "explain": "The Illness/Acute stage is full symptom expression — fever, elevated WBC, localized signs — and is when intervention is most critical."
+  },
+  {
+    "cat": "12. MDROs (MRSA, VRE, C. diff)",
+    "q": "Which MDRO can survive on surfaces for weeks and requires dedicated equipment that cannot be shared between patients?",
+    "choices": [
+      "MRSA",
+      "VRE",
+      "Both MRSA and VRE require contact precautions and dedicated equipment",
+      "Neither requires contact precautions"
+    ],
+    "correct": 2,
+    "explain": "Both MRSA and VRE require contact precautions with dedicated equipment; VRE specifically is noted to survive on surfaces for weeks, making dedicated equipment especially critical."
+  },
+  {
+    "cat": "12. MDROs (MRSA, VRE, C. diff)",
+    "q": "Which finding should prompt a stool culture and immediate provider notification for a patient at C. diff risk?",
+    "choices": [
+      "A single formed bowel movement",
+      "≥3 loose watery stools per day plus abdominal cramping",
+      "Any bowel movement at all in a post-operative patient",
+      "Constipation lasting more than 2 days"
+    ],
+    "correct": 1,
+    "explain": "≥3 loose watery stools per day plus abdominal cramping should prompt a stool culture and immediate provider notification — especially relevant for a patient like Marcus on ongoing broad-spectrum antibiotics."
+  },
+  {
+    "cat": "12. MDROs (MRSA, VRE, C. diff)",
+    "q": "What increases Marcus's specific risk for developing C. diff or fungal superinfection?",
+    "choices": [
+      "His narrow-spectrum single antibiotic",
+      "His broad-spectrum triple antibiotic regimen (required due to his PCN allergy) disrupting normal flora",
+      "His blood type",
+      "His wound VAC device alone"
+    ],
+    "correct": 1,
+    "explain": "Marcus's broad-spectrum antibiotic regimen (vancomycin + metronidazole + ciprofloxacin, needed due to his PCN allergy) increases his risk for C. diff and fungal superinfection by disrupting his normal protective flora."
+  },
+  {
+    "cat": "12. MDROs (MRSA, VRE, C. diff)",
+    "q": "Which class of antibiotics has documented cross-reactivity with penicillin of less than 1%, making it generally safe even in PCN anaphylaxis?",
+    "choices": [
+      "Cephalosporins",
+      "Carbapenems (e.g., meropenem)",
+      "Penicillins themselves",
+      "Sulfonamides"
+    ],
+    "correct": 1,
+    "explain": "True cross-reactivity between carbapenems and penicillin is documented at less than 1% — carbapenems are generally considered safe in PCN anaphylaxis (with pharmacy confirmation), unlike cephalosporins which carry a 1-2% cross-reactivity risk."
+  },
+  {
+    "cat": "12. MDROs (MRSA, VRE, C. diff)",
+    "q": "Which antibiotic has NO cross-reactivity with penicillins or cephalosporins, making it the safest choice for a truly severe PCN allergy?",
+    "choices": [
+      "Amoxicillin",
+      "Aztreonam (a monobactam)",
+      "Piperacillin-tazobactam",
+      "Ampicillin-sulbactam"
+    ],
+    "correct": 1,
+    "explain": "Aztreonam (a monobactam) has NO cross-reactivity with penicillins or cephalosporins, making it the safest option for a severe PCN allergy — though its gram-negative-only spectrum means it must be combined with other agents for full coverage."
+  },
+  {
+    "cat": "13. DVT Prevention & Virchow's Triad",
+    "q": "Virchow's Triad, the mechanism behind DVT formation, consists of venous stasis, hypercoagulability, and:",
+    "choices": [
+      "Arterial hypertension",
+      "Endothelial injury",
+      "Chronic dehydration",
+      "Elevated white blood cell count"
+    ],
+    "correct": 1,
+    "explain": "Virchow's Triad = venous stasis + endothelial injury + hypercoagulability. Marcus has all three simultaneously: no movement since 0200 (stasis), surgical vessel manipulation (endothelial injury), and a post-surgical inflammatory state (hypercoagulability)."
+  },
+  {
+    "cat": "13. DVT Prevention & Virchow's Triad",
+    "q": "Why is Homan's sign considered unreliable for DVT screening?",
+    "choices": [
+      "It has high sensitivity but is uncomfortable to perform",
+      "It has sensitivity below 50%, and about half of DVTs are clinically silent",
+      "It's actually a highly reliable and sufficient stand-alone test",
+      "It can only be performed by physicians, not nurses"
+    ],
+    "correct": 1,
+    "explain": "Homan's sign has sensitivity under 50% and should never be relied on as a sole DVT screening test — many DVTs are clinically silent with no reliable physical exam finding at all."
+  },
+  {
+    "cat": "13. DVT Prevention & Virchow's Triad",
+    "q": "Which of these is the MOST effective non-pharmacological DVT prevention intervention?",
+    "choices": [
+      "Bed rest to avoid dislodging any existing clot",
+      "Early ambulation, which directly activates the calf muscle pump mechanism",
+      "Elevating the head of the bed only",
+      "Avoiding all fluid intake"
+    ],
+    "correct": 1,
+    "explain": "Early ambulation is the most effective non-pharmacological DVT intervention — it activates the calf muscle pump mechanism directly, which SCDs and ankle pumps only partially substitute for when full ambulation isn't yet possible."
+  },
+  {
+    "cat": "13. DVT Prevention & Virchow's Triad",
+    "q": "When administering subcutaneous enoxaparin (Lovenox), what should the nurse NOT do?",
+    "choices": [
+      "Rotate injection sites",
+      "Expel the air bubble from a prefilled syringe",
+      "Inject in the abdomen away from the surgical wound",
+      "Monitor platelet count for HIT"
+    ],
+    "correct": 1,
+    "explain": "The air bubble in a prefilled enoxaparin syringe should NOT be expelled — this is a specific technique point, along with not rubbing the injection site afterward (which causes bruising and alters absorption)."
+  },
+  {
+    "cat": "13. DVT Prevention & Virchow's Triad",
+    "q": "SCDs (sequential compression devices) should be removed only for:",
+    "choices": [
+      "Ambulation, and reapplied immediately afterward",
+      "Meals",
+      "Nighttime sleep",
+      "SCDs should never be removed once applied"
+    ],
+    "correct": 0,
+    "explain": "SCDs should be running at all times when the patient is in bed or a chair, removed only for ambulation, and reapplied immediately afterward — SCDs alone are also noted as NOT sufficient prophylaxis for high-risk surgical patients without pharmacological prophylaxis too."
+  },
+  {
+    "cat": "14. Health Literacy & Teach-Back",
+    "q": "According to Kessels (2003), what percentage of healthcare information is forgotten immediately after a clinical encounter?",
+    "choices": [
+      "20%",
+      "50%",
+      "80%",
+      "95%"
+    ],
+    "correct": 2,
+    "explain": "80% of healthcare information is forgotten immediately after the clinical encounter, and of the 50% that IS retained, it's often recalled incorrectly — underscoring why teach-back and clear documentation matter so much."
+  },
+  {
+    "cat": "14. Health Literacy & Teach-Back",
+    "q": "In the five-step teach-back method, what should happen if a patient shows a gap in understanding?",
+    "choices": [
+      "Repeat the exact same words, only faster",
+      "Re-teach using a DIFFERENT approach — drawing, demonstration, or a written checklist",
+      "Move on anyway since the concept was already covered once",
+      "Document that teaching was completed regardless of the gap"
+    ],
+    "correct": 1,
+    "explain": "When a gap is identified, the nurse should re-teach using a different approach entirely (drawing, demonstration, written checklist) rather than simply repeating the same words — if the same explanation didn't work once, repeating it usually won't work better the second time."
+  },
+  {
+    "cat": "14. Health Literacy & Teach-Back",
+    "q": "Whose responsibility is it to ensure a patient understands their teaching, per the lecture?",
+    "choices": [
+      "The patient's — if they don't understand, they should ask more questions",
+      "The nurse's — teaching that isn't confirmed as understood is not complete",
+      "The family's, if present",
+      "No one's specifically — understanding is assumed unless the patient objects"
+    ],
+    "correct": 1,
+    "explain": "The lecture is explicit: it's the nurse's responsibility. A nurse who teaches and does not confirm understanding has not completed the teaching — nodding is not consent, and 'okay' is not comprehension."
+  },
+  {
+    "cat": "14. Health Literacy & Teach-Back",
+    "q": "In the 'chunk and check' step of teach-back, how many points should be taught before verifying understanding?",
+    "choices": [
+      "As many as fit in a single conversation",
+      "2-3 points, since humans reliably retain only about 3 items at once",
+      "10+ points at once for efficiency",
+      "Only 1 point per entire teaching session"
+    ],
+    "correct": 1,
+    "explain": "Teach 2-3 points, then verify before moving on — humans reliably retain approximately 3 items at once, so teaching an entire discharge packet in one sitting overwhelms retention."
+  },
+  {
+    "cat": "14. Health Literacy & Teach-Back",
+    "q": "Which documentation reflects PROPER teach-back, per the lecture's comparison?",
+    "choices": [
+      "\"Discharge teaching provided, patient verbalized understanding.\"",
+      "\"Patient verbalized fever >101°F, purulent/foul wound drainage, and wound separation as indicators to call surgeon. Teach-back confirmed x2.\"",
+      "\"Patient nodded when asked if he understood.\"",
+      "\"Teaching packet given to patient to review independently.\""
+    ],
+    "correct": 1,
+    "explain": "Specific documentation showing exactly what was taught, how the patient responded, and how many times it was confirmed is legally defensible. 'Patient verbalized understanding' alone is a placeholder, not real documentation."
+  },
+  {
+    "cat": "15. AIDET & I-PASS Handoff",
+    "q": "In the AIDET framework, what does the second 'I' component (Introduce) require the nurse to state?",
+    "choices": [
+      "Only their first name",
+      "Their name, their role, and what they will do during this visit",
+      "The patient's diagnosis and prognosis",
+      "The hospital's visiting hours policy"
+    ],
+    "correct": 1,
+    "explain": "Introduce means stating your name, your role, and what you will do during this visit — e.g., 'My name is ___. I'm your nurse today, 7am to 7pm. I'm here to check on your wound, your pain, and get you moving today.'"
+  },
+  {
+    "cat": "15. AIDET & I-PASS Handoff",
+    "q": "In the I-PASS handoff framework, what does the first 'I' (Illness Severity) establish?",
+    "choices": [
+      "The patient's insurance status",
+      "Whether the patient is Stable, a Watcher, or Unstable — setting urgency context before details are shared",
+      "The exact ICD-10 diagnosis code",
+      "The patient's ideal discharge date"
+    ],
+    "correct": 1,
+    "explain": "Illness Severity (Stable/Watcher/Unstable) sets the urgency context BEFORE any other detail is shared — Marcus was classified as a Watcher: not in crisis, but needing close surveillance."
+  },
+  {
+    "cat": "15. AIDET & I-PASS Handoff",
+    "q": "What percentage of serious preventable adverse events are linked to handoff failures, per the Joint Commission?",
+    "choices": [
+      "Under 10%",
+      "About 25%",
+      "More than 80%",
+      "Exactly 50%"
+    ],
+    "correct": 2,
+    "explain": "Handoff failures are involved in more than 80% of serious preventable adverse events (TJC) — structured handoff frameworks like I-PASS exist specifically to close this gap."
+  },
+  {
+    "cat": "15. AIDET & I-PASS Handoff",
+    "q": "The 'Synthesis by Receiver' step in I-PASS is the equivalent of what other patient-safety practice?",
+    "choices": [
+      "A verbal order given without confirmation",
+      "Read-back of orders — the oncoming nurse summarizes back what they heard to confirm the loop is closed",
+      "A silent nod of acknowledgment",
+      "Skipping verification to save time during a busy handoff"
+    ],
+    "correct": 1,
+    "explain": "Synthesis by Receiver means the oncoming nurse summarizes back what they heard — functionally equivalent to read-back for verbal orders, confirming the information loop is fully closed."
+  },
+  {
+    "cat": "15. AIDET & I-PASS Handoff",
+    "q": "By how much did the multicenter I-PASS study (Starmer et al., 2014) reduce medical errors?",
+    "choices": [
+      "5%",
+      "23%",
+      "50%",
+      "It showed no measurable reduction"
+    ],
+    "correct": 1,
+    "explain": "The multicenter I-PASS study showed a 23% reduction in medical errors after implementation — strong evidence for structured handoff communication."
+  }
+];
+let current = 0, score = 0, answered = false;
+const missed = []; const catStats = {};
+const card = document.getElementById("quizCard");
+const progressText = document.getElementById("progressText");
+const traceFill = document.getElementById("traceFill");
+const catBar = document.getElementById("catBar");
+document.getElementById("progressText").innerHTML = "<strong>1</strong> / " + QUESTIONS.length;
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  progressText.innerHTML = "<strong>" + (current + 1) + "</strong> / " + QUESTIONS.length;
+  catBar.textContent = item.cat;
+  traceFill.style.setProperty("--reveal", (100 - ((current) / QUESTIONS.length) * 100) + "%");
+  card.innerHTML = "";
+  const qnum = document.createElement("div"); qnum.className = "qnum"; qnum.textContent = "Question " + (current + 1) + " of " + QUESTIONS.length; card.appendChild(qnum);
+  const qtext = document.createElement("p"); qtext.className = "qtext"; qtext.textContent = item.q; card.appendChild(qtext);
+  const choicesWrap = document.createElement("div"); choicesWrap.className = "choices";
+  item.choices.forEach((choiceText, idx) => {
+    const btn = document.createElement("button"); btn.className = "choice"; btn.textContent = choiceText;
+    btn.addEventListener("click", () => handleAnswer(idx, btn, choicesWrap, item));
+    choicesWrap.appendChild(btn);
+  });
+  card.appendChild(choicesWrap);
+  const explain = document.createElement("div"); explain.className = "explain"; explain.id = "explainBox"; explain.innerHTML = "<b>Why:</b> " + item.explain; card.appendChild(explain);
+  const footerRow = document.createElement("div"); footerRow.className = "footer-row";
+  const nextBtn = document.createElement("button"); nextBtn.className = "next-btn"; nextBtn.id = "nextBtn";
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? "See results" : "Next question";
+  nextBtn.addEventListener("click", goNext); footerRow.appendChild(nextBtn); card.appendChild(footerRow);
+}
+function handleAnswer(idx, btn, choicesWrap, item) {
+  if (answered) return; answered = true;
+  if (!catStats[item.cat]) catStats[item.cat] = { correct: 0, total: 0 };
+  catStats[item.cat].total++;
+  const buttons = choicesWrap.querySelectorAll(".choice"); buttons.forEach((b) => (b.disabled = true));
+  if (idx === item.correct) { btn.classList.add("correct"); score++; catStats[item.cat].correct++; }
+  else { btn.classList.add("incorrect"); buttons[item.correct].classList.add("reveal-correct"); missed.push({ q: item.q, explain: item.explain, cat: item.cat }); }
+  document.getElementById("explainBox").classList.add("show"); document.getElementById("nextBtn").classList.add("show");
+}
+function goNext() { if (current < QUESTIONS.length - 1) { current++; renderQuestion(); } else { renderResults(); } }
+function renderResults() {
+  traceFill.style.setProperty("--reveal", "0%"); progressText.innerHTML = "<strong>Done</strong>"; catBar.textContent = "";
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let verdict;
+  if (pct >= 90) verdict = "Excellent command of Week 5 across every section — you're in strong shape for the exam.";
+  else if (pct >= 75) verdict = "Solid overall grasp. Check the category breakdown and review your weakest section.";
+  else if (pct >= 50) verdict = "Foundation is there, but several areas need another pass.";
+  else verdict = "Worth another full pass through the study guide and in-class quiz material.";
+  card.innerHTML = "";
+  const results = document.createElement("div"); results.className = "results";
+  results.innerHTML = '<div class="score-big">' + score + " / " + QUESTIONS.length + '</div><div class="score-label">' + pct + '% correct</div><div class="verdict">' + verdict + "</div>";
+  const catList = document.createElement("ul"); catList.className = "cat-breakdown";
+  Object.keys(catStats).forEach((cat) => { const stat = catStats[cat]; const li = document.createElement("li"); li.innerHTML = "<span>" + cat + "</span><b>" + stat.correct + " / " + stat.total + "</b>"; catList.appendChild(li); });
+  results.appendChild(catList);
+  if (missed.length > 0) {
+    const list = document.createElement("ul"); list.className = "missed-list";
+    missed.forEach((m) => { const li = document.createElement("li"); li.innerHTML = "<b>" + m.q + "</b><br>" + m.explain; list.appendChild(li); });
+    results.appendChild(list);
+  }
+  const restartBtn = document.createElement("button"); restartBtn.className = "restart-btn"; restartBtn.textContent = "Retake quiz";
+  restartBtn.addEventListener("click", () => { current = 0; score = 0; missed.length = 0; Object.keys(catStats).forEach((k) => delete catStats[k]); renderQuestion(); });
+  results.appendChild(restartBtn); card.appendChild(results);
+}
+renderQuestion();
+</script>
+</body>
+</html>
